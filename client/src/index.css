@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-color: #00c598;
+  --primary-dark: #00a37e;
+  --primary-light: #e6faf5;
+}
+
+/* A4 Page Dimensions & Rendering */
+.a4-page {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 18mm 18mm 18mm 18mm;
+  margin: 0 auto;
+  background-color: #ffffff;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+  position: relative;
+  box-sizing: border-box;
+  page-break-after: always;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Global Hidden Print / PDF Export Styles */
+.exporting-pdf .no-print,
+.exporting-pdf .hover-action-bar,
+.exporting-pdf .gear-popup,
+.exporting-pdf .btn-new-section,
+.exporting-pdf button.no-print,
+.exporting-pdf [contenteditable="true"]:hover,
+.exporting-pdf [contenteditable="true"]:focus {
+  display: none !important;
+  outline: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+@media print {
+  body {
+    background: white !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .a4-page {
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    padding: 12mm 15mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    page-break-after: always;
+  }
+
+  /* Hide any editing hover artifacts during print */
+  .hover-action-bar,
+  .gear-popup,
+  .btn-add-entry,
+  .btn-new-section,
+  button.no-print {
+    display: none !important;
+  }
+}
+
+/* Custom Enhancv Selection & Inputs */
+[contenteditable="true"] {
+  outline: none;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 2px;
+}
+
+[contenteditable="true"]:hover {
+  background-color: rgba(0, 197, 152, 0.06);
+}
+
+[contenteditable="true"]:focus {
+  background-color: rgba(0, 197, 152, 0.12);
+  outline: 1.5px solid #00c598;
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Floating animation */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-popover {
+  animation: fadeInScale 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
