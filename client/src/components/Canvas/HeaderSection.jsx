@@ -101,7 +101,7 @@ export default function HeaderSection({ header, onChange, theme }) {
               }`}
             style={{ color: '#0f172a' }}
           >
-            {header.name || 'YOUR FULL NAME'}
+            {header.name || 'YOUR FULL NAME Hiyer'}
           </h1>
 
           {/* Job Title / Candidate Designation */}
