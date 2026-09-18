@@ -1,5 +1,6 @@
-const API_RESUMES = '/api/resumes';
-const API_AUTH = '/api/auth';
+const BASE_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '';
+const API_RESUMES = `${BASE_URL}/api/resumes`;
+const API_AUTH = `${BASE_URL}/api/auth`;
 
 export const api = {
   // Auth: Login
@@ -24,7 +25,7 @@ export const api = {
       if (err.message && !err.message.includes('fetch')) {
         throw err;
       }
-      
+
       // Fallback only for network disconnect
       console.warn('Network offline, checking offline fallback credentials:', err.message);
       const normalized = email.toLowerCase().trim();
