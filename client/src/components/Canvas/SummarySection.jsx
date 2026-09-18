@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import FloatingToolbar from '../UI/FloatingToolbar';
 
-export default function SummarySection({ 
-  section, 
-  onChange, 
-  onDelete, 
-  onMoveUp, 
-  onMoveDown, 
-  onSwitchColumn, 
-  theme 
+export default function SummarySection({
+  section,
+  onChange,
+  onDelete,
+  onMoveUp,
+  onMoveDown,
+  onSwitchColumn,
+  theme
 }) {
   const [isBullets, setIsBullets] = useState(section.settings?.isBullet || false);
 

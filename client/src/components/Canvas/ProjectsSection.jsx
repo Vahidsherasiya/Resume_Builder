@@ -136,29 +136,30 @@ export default function ProjectsSection({
               <Trash2 className="w-3.5 h-3.5" />
             </button>
 
-            {/* Project Title */}
-            <div
-              contentEditable
-              suppressContentEditableWarning
-              onBlur={(e) => handleItemChange(idx, 'name', e.currentTarget.textContent || '')}
-              className="text-xs font-bold text-slate-900 focus:outline-none leading-snug"
-            >
-              {item.name}
-            </div>
-
-            {/* Date Range with Calendar Icon */}
-            <div className="inline-flex items-center gap-1.5 text-[10px] text-slate-500 font-medium leading-none">
-              <span className="w-3 h-3 flex items-center justify-center flex-shrink-0 text-slate-400">
-                <Calendar className="w-3 h-3" />
-              </span>
-              <span
+            {/* Project Title & Date Range Header */}
+            <div className="flex items-center justify-between gap-2">
+              <div
                 contentEditable
                 suppressContentEditableWarning
-                onBlur={(e) => handleItemChange(idx, 'dateRange', e.currentTarget.textContent || '')}
-                className="focus:outline-none leading-none"
+                onBlur={(e) => handleItemChange(idx, 'name', e.currentTarget.textContent || '')}
+                className="text-xs font-bold text-slate-900 focus:outline-none leading-snug"
               >
-                {item.dateRange}
-              </span>
+                {item.name}
+              </div>
+
+              {item.dateRange && (
+                <div className="resume-icon-badge inline-flex items-center gap-1 text-[10px] text-slate-500 font-medium whitespace-nowrap shrink-0">
+                  <Calendar className="w-3 h-3 text-slate-400 shrink-0 overflow-visible" />
+                  <span
+                    contentEditable
+                    suppressContentEditableWarning
+                    onBlur={(e) => handleItemChange(idx, 'dateRange', e.currentTarget.textContent || '')}
+                    className="focus:outline-none inline-block leading-none"
+                  >
+                    {item.dateRange}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Subtitle */}

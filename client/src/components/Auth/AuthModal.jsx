@@ -1,0 +1,266 @@
+import React, { useState } from 'react';
+import { 
+  Lock, Mail, User, ArrowRight, ShieldCheck, 
+  Sparkles, CheckCircle, Shield, KeyRound, AlertCircle, Info 
+} from 'lucide-react';
+import { api } from '../../services/api';
+
+export default function AuthModal({ onLoginSuccess }) {
+  const [isRegister, setIsRegister] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMsg('');
+    setSuccessMsg('');
+    setIsLoading(true);
+
+    try {
+      if (isRegister) {
+        if (!name.trim()) {
+          setErrorMsg('Please enter your full name');
+          setIsLoading(false);
+          return;
+        }
+        if (password.length < 4) {
+          setErrorMsg('Password must be at least 4 characters');
+          setIsLoading(false);
+          return;
+        }
+        const res = await api.register({ name, email, password });
+        if (res && res.user) {
+          onLoginSuccess(res.user);
+        } else {
+          setErrorMsg(res?.message || 'Registration failed');
+        }
+      } else {
+        const res = await api.login({ email, password });
+        if (res && res.user) {
+          onLoginSuccess(res.user);
+        } else {
+          setErrorMsg(res?.message || 'Invalid email or password');
+        }
+      }
+    } catch (err) {
+      setErrorMsg(err.message || 'Authentication failed. Please verify your credentials.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFillCredentials = (fillEmail, fillPassword) => {
+    setEmail(fillEmail);
+    setPassword(fillPassword);
+    setIsRegister(false);
+    setErrorMsg('');
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 sm:p-6 overflow-y-auto">
+      <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col md:flex-row animate-popover">
+        {/* Left Brand Panel */}
+        <div className="md:w-5/12 bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+          {/* Subtle Ambient Glow */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#00c598]/20 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20"></div>
+
+          <div className="relative z-10">
+            {/* Logo */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#00a37e] to-[#00c598] flex items-center justify-center text-white font-black text-xl shadow-lg shadow-[#00c598]/30">
+                E
+              </div>
+              <div>
+                <span className="font-extrabold text-lg text-white tracking-tight">Enhancv</span>
+                <span className="text-[#00c598] font-bold text-xs bg-[#00c598]/20 ml-2 px-2 py-0.5 rounded-full border border-[#00c598]/30">
+                  A4 Pro
+                </span>
+              </div>
+            </div>
+
+            <h2 className="text-2xl font-black tracking-tight leading-snug mb-3">
+              Build Dream Resumes That Get You Hired.
+            </h2>
+            <p className="text-slate-400 text-xs leading-relaxed mb-6">
+              Access 10 modern ATS-friendly templates, pre-filled with realistic sample dummy data and live A4 PDF export.
+            </p>
+
+            <div className="space-y-3 text-xs">
+              <div className="flex items-center gap-2.5 text-slate-300">
+                <CheckCircle className="w-4 h-4 text-[#00c598] shrink-0" />
+                <span>10 Handcrafted Professional Templates</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-slate-300">
+                <CheckCircle className="w-4 h-4 text-[#00c598] shrink-0" />
+                <span>Preloaded with Realistic Sample Data</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-slate-300">
+                <CheckCircle className="w-4 h-4 text-[#00c598] shrink-0" />
+                <span>Admin User Role Management & Template Publishing</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-slate-300">
+                <CheckCircle className="w-4 h-4 text-[#00c598] shrink-0" />
+                <span>MongoDB Cloud Secure Authentication</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative z-10 pt-8 border-t border-slate-800 text-[11px] text-slate-400 flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-[#00c598]" />
+            <span>Encrypted Password & Role-Based Access</span>
+          </div>
+        </div>
+
+        {/* Right Form Panel */}
+        <div className="md:w-7/12 p-8 sm:p-10 flex flex-col justify-center bg-white">
+          <div className="max-w-md mx-auto w-full">
+            <div className="mb-6">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-[11px] font-bold mb-3 border border-slate-200">
+                <KeyRound className="w-3.5 h-3.5 text-[#00c598]" />
+                <span>{isRegister ? 'New Registration (Default: User)' : 'Verified Credentials Required'}</span>
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
+                {isRegister ? 'Create Your Account' : 'Welcome Back'}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1">
+                {isRegister
+                  ? 'Sign up with your details. Your default account role will be User.'
+                  : 'Enter your verified email and password to log in.'}
+              </p>
+            </div>
+
+            {errorMsg && (
+              <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-semibold flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                <span>{errorMsg}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {isRegister && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Alex Morgan"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00c598]/50 focus:border-[#00c598] transition-all"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00c598]/50 focus:border-[#00c598] transition-all"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  Password
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00c598]/50 focus:border-[#00c598] transition-all"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3 px-4 bg-gradient-to-r from-[#00c598] to-[#00a37e] hover:from-[#00a37e] hover:to-[#008f6e] text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all duration-150 flex items-center justify-center gap-2 mt-2"
+              >
+                <span>{isLoading ? 'Verifying...' : isRegister ? 'Create Account & Sign In' : 'Log In with Verified Credentials'}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
+
+            {/* Hint Chips for Verified Accounts */}
+            <div className="mt-5 p-3 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                  <Info className="w-3 h-3 text-slate-400" />
+                  <span>Verified Test Accounts</span>
+                </span>
+                <span className="text-[10px] text-slate-400">Click to fill</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-[11px]">
+                <button
+                  type="button"
+                  onClick={() => handleFillCredentials('admin@enhancv.com', 'admin123')}
+                  className="p-2 bg-white hover:bg-purple-50 rounded-xl border border-slate-200 hover:border-purple-300 text-left transition-colors"
+                >
+                  <div className="flex items-center gap-1 font-bold text-purple-700">
+                    <Shield className="w-3 h-3" />
+                    <span>Admin</span>
+                  </div>
+                  <div className="text-[10px] text-slate-500 truncate">admin@enhancv.com</div>
+                  <div className="text-[9px] text-slate-400 font-mono">admin123</div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleFillCredentials('user@enhancv.com', 'user123')}
+                  className="p-2 bg-white hover:bg-emerald-50 rounded-xl border border-slate-200 hover:border-emerald-300 text-left transition-colors"
+                >
+                  <div className="flex items-center gap-1 font-bold text-emerald-700">
+                    <User className="w-3 h-3" />
+                    <span>User</span>
+                  </div>
+                  <div className="text-[10px] text-slate-500 truncate">user@enhancv.com</div>
+                  <div className="text-[9px] text-slate-400 font-mono">user123</div>
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-5 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRegister(!isRegister);
+                  setErrorMsg('');
+                }}
+                className="text-xs text-slate-600 hover:text-[#00c598] font-bold transition-colors"
+              >
+                {isRegister
+                  ? 'Already have an account? Log in'
+                  : "Don't have an account? Sign up (Default role: User)"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

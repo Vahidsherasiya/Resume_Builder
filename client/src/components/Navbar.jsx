@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { 
   Download, Printer, Save, RefreshCw, Palette, 
   Type, LayoutGrid, Check, Sparkles, Cloud, Share2, 
-  ArrowUpDown, SlidersHorizontal 
+  ArrowUpDown, SlidersHorizontal, Layout, User as UserIcon, LogOut, Shield 
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import RearrangeSectionsModal from './Modals/RearrangeSectionsModal';
+import TemplateSelectorModal from './Modals/TemplateSelectorModal';
 
 const THEME_COLORS = [
   { name: 'Teal (Enhancv)', value: '#00c598' },
@@ -40,6 +41,12 @@ export default function Navbar({
   onDownloadPdf,
   onPrint,
   onReset,
+  onSelectTemplate,
+  currentUser,
+  onLogout,
+  currentView,
+  onNavigateView,
+  templates,
   isSaving,
   saveStatus
 }) {
@@ -47,8 +54,9 @@ export default function Navbar({
   const [showFontPicker, setShowFontPicker] = useState(false);
   const [showLayoutPicker, setShowLayoutPicker] = useState(false);
   const [showRearrangeModal, setShowRearrangeModal] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
-  const theme = resume.theme || {};
+  const theme = resume?.theme || {};
 
   const updateTheme = (updates) => {
     onResumeChange({
@@ -58,6 +66,18 @@ export default function Navbar({
         ...updates
       }
     });
+  };
+
+  const handleTemplatesClick = () => {
+    if (currentView !== 'dashboard') {
+      onNavigateView('dashboard');
+    }
+    setTimeout(() => {
+      const el = document.getElementById('templates-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   const handleConfettiAndDownload = () => {
@@ -71,14 +91,20 @@ export default function Navbar({
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-        {/* Logo & Document Title */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+        {/* Left: Logo & Navigation Tabs */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00a37e] to-[#00c598] flex items-center justify-center text-white font-black text-lg shadow-sm">
+          <div 
+            onClick={() => onNavigateView('dashboard')}
+            className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00a37e] to-[#00c598] flex items-center justify-center text-white font-black text-lg shadow-sm cursor-pointer"
+          >
             E
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div 
+              onClick={() => onNavigateView('dashboard')}
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <span className="font-extrabold text-slate-900 tracking-tight text-base">
                 Enhancv <span className="text-[#00c598] font-medium text-xs bg-[#e6faf5] px-2 py-0.5 rounded-full border border-[#00c598]/30">A4 Builder</span>
               </span>
@@ -87,187 +113,327 @@ export default function Navbar({
               Pixel-perfect MERN Resume & Live Editor
             </p>
           </div>
-        </div>
 
-        {/* Center Customization Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* Rearrange Sections Button */}
+          {/* Navigation: Dashboard Button */}
           <button
             type="button"
-            onClick={() => setShowRearrangeModal(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
-            title="Rearrange Sections"
+            onClick={() => onNavigateView('dashboard')}
+            className={`ml-3 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              currentView === 'dashboard'
+                ? 'bg-slate-900 text-white shadow-sm'
+                : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/80'
+            }`}
           >
-            <ArrowUpDown className="w-3.5 h-3.5 text-[#00c598]" />
-            <span className="hidden md:inline">Rearrange</span>
+            <LayoutGrid className="w-3.5 h-3.5 text-[#00c598]" />
+            <span>Dashboard</span>
           </button>
 
-          {/* Color Picker Dropdown */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => {
-                setShowColorPicker(!showColorPicker);
-                setShowFontPicker(false);
-                setShowLayoutPicker(false);
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
-            >
-              <div
-                className="w-3.5 h-3.5 rounded-full ring-1 ring-black/10"
-                style={{ backgroundColor: theme.primaryColor || '#00c598' }}
-              />
-              <span className="hidden md:inline">Color</span>
-            </button>
-
-            {showColorPicker && (
-              <div className="absolute top-11 left-0 z-50 w-52 bg-white rounded-xl shadow-xl border border-slate-200 p-3 animate-popover">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
-                  Accent Color
-                </span>
-                <div className="grid grid-cols-2 gap-2">
-                  {THEME_COLORS.map((c) => (
-                    <button
-                      key={c.value}
-                      onClick={() => {
-                        updateTheme({ primaryColor: c.value });
-                        setShowColorPicker(false);
-                      }}
-                      className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-100 text-xs font-medium text-slate-700"
-                    >
-                      <span className="w-4 h-4 rounded-full" style={{ backgroundColor: c.value }} />
-                      <span className="truncate">{c.name.split(' ')[0]}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Font Selector Dropdown */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => {
-                setShowFontPicker(!showFontPicker);
-                setShowColorPicker(false);
-                setShowLayoutPicker(false);
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
-            >
-              <Type className="w-3.5 h-3.5 text-slate-500" />
-              <span className="hidden md:inline">Font</span>
-            </button>
-
-            {showFontPicker && (
-              <div className="absolute top-11 left-0 z-50 w-48 bg-white rounded-xl shadow-xl border border-slate-200 p-2 animate-popover">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block px-2 py-1">
-                  Typography
-                </span>
-                <div className="space-y-1">
-                  {FONTS.map((f) => (
-                    <button
-                      key={f.value}
-                      onClick={() => {
-                        updateTheme({ fontFamily: f.value });
-                        setShowFontPicker(false);
-                      }}
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-xs font-medium text-slate-700 text-left"
-                    >
-                      <span>{f.name}</span>
-                      {theme.fontFamily === f.value && <Check className="w-3.5 h-3.5 text-[#00c598]" />}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Layout Split Dropdown */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => {
-                setShowLayoutPicker(!showLayoutPicker);
-                setShowColorPicker(false);
-                setShowFontPicker(false);
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
-            >
-              <LayoutGrid className="w-3.5 h-3.5 text-slate-500" />
-              <span className="hidden md:inline">Layout</span>
-            </button>
-
-            {showLayoutPicker && (
-              <div className="absolute top-11 left-0 z-50 w-48 bg-white rounded-xl shadow-xl border border-slate-200 p-2 animate-popover">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block px-2 py-1">
-                  Column Structure
-                </span>
-                <div className="space-y-1">
-                  {LAYOUTS.map((l) => (
-                    <button
-                      key={l.value}
-                      onClick={() => {
-                        updateTheme({ columnLayout: l.value });
-                        setShowLayoutPicker(false);
-                      }}
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-xs font-medium text-slate-700 text-left"
-                    >
-                      <span>{l.label}</span>
-                      {theme.columnLayout === l.value && <Check className="w-3.5 h-3.5 text-[#00c598]" />}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          {/* Navigation: Templates Button */}
+          <button
+            type="button"
+            onClick={handleTemplatesClick}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm hover:shadow transition-all duration-150"
+            title="Browse 10 Professional Resume Templates"
+          >
+            <Layout className="w-3.5 h-3.5" />
+            <span>Templates</span>
+            <span className="px-1.5 py-0.2 bg-white/20 rounded-full text-[10px] font-mono">10</span>
+          </button>
         </div>
+
+        {/* Center: Customization Controls (Shown ONLY in Editor View) */}
+        {currentView === 'editor' && (
+          <div className="flex items-center gap-1 sm:gap-2">
+            {/* Rearrange Sections Button */}
+            <button
+              type="button"
+              onClick={() => setShowRearrangeModal(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
+              title="Rearrange Sections"
+            >
+              <ArrowUpDown className="w-3.5 h-3.5 text-[#00c598]" />
+              <span className="hidden md:inline">Rearrange</span>
+            </button>
+
+            {/* Color Picker Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowColorPicker(!showColorPicker);
+                  setShowFontPicker(false);
+                  setShowLayoutPicker(false);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
+              >
+                <div
+                  className="w-3.5 h-3.5 rounded-full ring-1 ring-black/10"
+                  style={{ backgroundColor: theme.primaryColor || '#00c598' }}
+                />
+                <span className="hidden md:inline">Color</span>
+              </button>
+
+              {showColorPicker && (
+                <div className="absolute top-11 left-0 z-50 w-52 bg-white rounded-xl shadow-xl border border-slate-200 p-3 animate-popover">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-2">
+                    Accent Color
+                  </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {THEME_COLORS.map((c) => (
+                      <button
+                        key={c.value}
+                        onClick={() => {
+                          updateTheme({ primaryColor: c.value });
+                          setShowColorPicker(false);
+                        }}
+                        className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-100 text-xs font-medium text-slate-700"
+                      >
+                        <span className="w-4 h-4 rounded-full" style={{ backgroundColor: c.value }} />
+                        <span className="truncate">{c.name.split(' ')[0]}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Font Selector Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowFontPicker(!showFontPicker);
+                  setShowColorPicker(false);
+                  setShowLayoutPicker(false);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
+              >
+                <Type className="w-3.5 h-3.5 text-slate-500" />
+                <span className="hidden md:inline">Font</span>
+              </button>
+
+              {showFontPicker && (
+                <div className="absolute top-11 left-0 z-50 w-48 bg-white rounded-xl shadow-xl border border-slate-200 p-2 animate-popover">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block px-2 py-1">
+                    Typography
+                  </span>
+                  <div className="space-y-1">
+                    {FONTS.map((f) => (
+                      <button
+                        key={f.value}
+                        onClick={() => {
+                          updateTheme({ fontFamily: f.value });
+                          setShowFontPicker(false);
+                        }}
+                        className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-xs font-medium text-slate-700 text-left"
+                      >
+                        <span>{f.name}</span>
+                        {theme.fontFamily === f.value && <Check className="w-3.5 h-3.5 text-[#00c598]" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Layout Split Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowLayoutPicker(!showLayoutPicker);
+                  setShowColorPicker(false);
+                  setShowFontPicker(false);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
+              >
+                <LayoutGrid className="w-3.5 h-3.5 text-slate-500" />
+                <span className="hidden md:inline">Layout</span>
+              </button>
+
+              {showLayoutPicker && (
+                <div className="absolute top-11 left-0 z-50 w-48 bg-white rounded-xl shadow-xl border border-slate-200 p-2 animate-popover">
+                  <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block px-2 py-1">
+                    Column Structure
+                  </span>
+                  <div className="space-y-1">
+                    {LAYOUTS.map((l) => (
+                      <button
+                        key={l.value}
+                        onClick={() => {
+                          updateTheme({ columnLayout: l.value });
+                          setShowLayoutPicker(false);
+                        }}
+                        className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-xs font-medium text-slate-700 text-left"
+                      >
+                        <span>{l.label}</span>
+                        {theme.columnLayout === l.value && <Check className="w-3.5 h-3.5 text-[#00c598]" />}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Right Action Buttons */}
         <div className="flex items-center gap-2">
-          {/* Save to MERN Backend */}
-          <button
-            type="button"
-            onClick={onSave}
-            disabled={isSaving}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors"
-            title="Save to MongoDB"
-          >
-            <Cloud className="w-4 h-4 text-[#00c598]" />
-            <span className="hidden sm:inline">
-              {isSaving ? 'Saving...' : saveStatus || 'Save'}
-            </span>
-          </button>
+          {/* Admin Portal Tab (Shown ONLY for Admins) */}
+          {currentUser?.role === 'admin' && (
+            <button
+              type="button"
+              onClick={() => onNavigateView(currentView === 'admin' ? 'dashboard' : 'admin')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                currentView === 'admin'
+                  ? 'bg-purple-600 text-white shadow-sm'
+                  : 'bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200'
+              }`}
+              title="Admin Panel: Manage Users & Upload Templates"
+            >
+              <Shield className="w-3.5 h-3.5" />
+              <span>Admin Panel</span>
+            </button>
+          )}
 
-          {/* Reset Template */}
-          <button
-            type="button"
-            onClick={onReset}
-            className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
-            title="Reset to Default"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
+          {/* Editor Action Buttons (Shown ONLY in Editor View) */}
+          {currentView === 'editor' && (
+            <>
+              {/* Save to MERN Backend */}
+              <button
+                type="button"
+                onClick={onSave}
+                disabled={isSaving}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors"
+                title="Save to MongoDB"
+              >
+                <Cloud className="w-4 h-4 text-[#00c598]" />
+                <span className="hidden sm:inline">
+                  {isSaving ? 'Saving...' : saveStatus || 'Save'}
+                </span>
+              </button>
 
-          {/* Print A4 */}
-          <button
-            type="button"
-            onClick={onPrint}
-            className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors"
-            title="Print A4"
-          >
-            <Printer className="w-4 h-4" />
-          </button>
+              {/* Reset Template */}
+              <button
+                type="button"
+                onClick={onReset}
+                className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+                title="Reset with Dummy Data"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
 
-          {/* Download PDF (A4 Export) */}
-          <button
-            type="button"
-            onClick={handleConfettiAndDownload}
-            className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-[#00c598] to-[#00a37e] hover:from-[#00a37e] hover:to-[#008f6e] rounded-lg shadow-sm hover:shadow transition-all"
-          >
-            <Download className="w-4 h-4" />
-            <span>Download PDF</span>
-          </button>
+              {/* Print A4 - SHOWN ONLY FOR ADMINS */}
+              {currentUser?.role === 'admin' && (
+                <button
+                  type="button"
+                  onClick={onPrint}
+                  className="p-2 text-purple-700 hover:text-purple-900 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 transition-colors"
+                  title="Print A4 (Admin Feature)"
+                >
+                  <Printer className="w-4 h-4" />
+                </button>
+              )}
+
+              {/* Download PDF (A4 Export) */}
+              <button
+                type="button"
+                onClick={handleConfettiAndDownload}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-[#00c598] to-[#00a37e] hover:from-[#00a37e] hover:to-[#008f6e] rounded-lg shadow-sm hover:shadow transition-all"
+              >
+                <Download className="w-4 h-4" />
+                <span className="hidden sm:inline">Download PDF</span>
+              </button>
+            </>
+          )}
+
+          {/* User Account / Logout Menu */}
+          {currentUser && (
+            <div className="relative ml-1">
+              <button
+                type="button"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+                className="flex items-center gap-1.5 p-1 rounded-full hover:ring-2 hover:ring-[#00c598]/40 transition-all"
+                title={`Logged in as ${currentUser.name || currentUser.email} (${currentUser.role || 'user'})`}
+              >
+                <div className={`w-8 h-8 rounded-full text-white flex items-center justify-center font-bold text-xs ${
+                  currentUser.role === 'admin' ? 'bg-purple-600' : 'bg-slate-900'
+                }`}>
+                  {currentUser.name ? currentUser.name[0].toUpperCase() : 'U'}
+                </div>
+              </button>
+
+              {showUserMenu && (
+                <div className="absolute right-0 top-11 z-50 w-56 bg-white rounded-xl shadow-xl border border-slate-200 p-2 animate-popover">
+                  <div className="px-3 py-2 border-b border-slate-100 mb-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs font-bold text-slate-800 truncate">
+                        {currentUser.name || 'User'}
+                      </p>
+                      <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
+                        currentUser.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-slate-100 text-slate-600'
+                      }`}>
+                        {currentUser.role?.toUpperCase() || 'USER'}
+                      </span>
+                    </div>
+                    <p className="text-[10px] text-slate-500 truncate mt-0.5">
+                      {currentUser.email}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      onNavigateView('dashboard');
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-lg text-left"
+                  >
+                    <LayoutGrid className="w-3.5 h-3.5 text-[#00c598]" />
+                    <span>My Dashboard</span>
+                  </button>
+
+                  {currentUser.role === 'admin' && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        onNavigateView('admin');
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-50 rounded-lg text-left"
+                    >
+                      <Shield className="w-3.5 h-3.5 text-purple-600" />
+                      <span>Admin Control Panel</span>
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      handleTemplatesClick();
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-lg text-left"
+                  >
+                    <Layout className="w-3.5 h-3.5 text-indigo-500" />
+                    <span>Browse 10 Templates</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      onLogout();
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg text-left mt-1"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -282,3 +448,4 @@ export default function Navbar({
     </header>
   );
 }
+

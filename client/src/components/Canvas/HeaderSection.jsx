@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import HeaderSettingsModal from '../Modals/HeaderSettingsModal';
 
-export default function HeaderSection({ header, onChange, theme }) {
+export default function HeaderSection({ header, onChange, theme, isDarkHeader }) {
   const [showSettings, setShowSettings] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -51,7 +51,7 @@ export default function HeaderSection({ header, onChange, theme }) {
   };
 
   return (
-    <div className="relative group pb-4 mb-4 border-b border-slate-200">
+    <div className={`relative group pb-4 mb-4 ${isDarkHeader ? '' : 'border-b border-slate-200'}`}>
       {/* Centered Top Floating Buttons (Camera & Settings Gear) - Hidden in Print/PDF */}
       <div className="absolute -top-7 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-white/95 backdrop-blur-md rounded-full shadow-toolbar border border-slate-200 p-1 opacity-90 group-hover:opacity-100 transition-all duration-200 no-print select-none">
         <button
@@ -97,11 +97,12 @@ export default function HeaderSection({ header, onChange, theme }) {
             contentEditable
             suppressContentEditableWarning
             onBlur={(e) => handleTextChange('name', e.currentTarget.textContent || '')}
-            className={`text-3xl font-extrabold tracking-tight text-slate-900 leading-tight focus:outline-none ${settings.isUppercaseName ? 'uppercase' : ''
-              }`}
-            style={{ color: '#0f172a' }}
+            className={`text-3xl font-extrabold tracking-tight leading-tight focus:outline-none ${
+              settings.isUppercaseName ? 'uppercase' : ''
+            } ${isDarkHeader ? 'text-white' : 'text-slate-900'}`}
+            style={{ color: isDarkHeader ? '#ffffff' : '#0f172a' }}
           >
-            {header.name || 'YOUR FULL NAME Hiyer'}
+            {header.name || 'YOUR FULL NAME'}
           </h1>
 
           {/* Job Title / Candidate Designation */}
@@ -111,24 +112,24 @@ export default function HeaderSection({ header, onChange, theme }) {
               suppressContentEditableWarning
               onBlur={(e) => handleTextChange('title', e.currentTarget.textContent || '')}
               className="text-lg font-semibold tracking-wide leading-snug"
-              style={{ color: theme.primaryColor || '#00c598' }}
+              style={{ color: isDarkHeader ? '#38bdf8' : (theme.primaryColor || '#00c598') }}
             >
               {header.title || 'Full Stack Developer'}
             </div>
           )}
 
-          {/* Contact Details Tags Row with baseline-aligned icons */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-xs font-medium text-slate-600">
+          {/* Contact Details Tags Row with pixel-perfect icon-text alignment */}
+          <div className={`flex flex-wrap items-center gap-x-4 gap-y-2 pt-2 text-xs font-medium ${
+            isDarkHeader ? 'text-slate-300' : 'text-slate-600'
+          }`}>
             {settings.showPhone && (
-              <div className="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors leading-none">
-                <span className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0 text-[#3b82f6]">
-                  <Phone className="w-3.5 h-3.5" />
-                </span>
+              <div className="contact-pill inline-flex items-center gap-1.5 whitespace-nowrap hover:text-slate-900 transition-colors">
+                <Phone className="w-3.5 h-3.5 text-[#3b82f6] shrink-0 overflow-visible" />
                 <span
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleTextChange('phone', e.currentTarget.textContent || '')}
-                  className="px-0.5 leading-none"
+                  className="leading-none inline-block"
                 >
                   {header.phone || '+91 0000000000'}
                 </span>
@@ -136,15 +137,13 @@ export default function HeaderSection({ header, onChange, theme }) {
             )}
 
             {settings.showEmail && (
-              <div className="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors leading-none">
-                <span className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0 text-[#3b82f6]">
-                  <Mail className="w-3.5 h-3.5" />
-                </span>
+              <div className="contact-pill inline-flex items-center gap-1.5 whitespace-nowrap hover:text-slate-900 transition-colors">
+                <Mail className="w-3.5 h-3.5 text-[#3b82f6] shrink-0 overflow-visible" />
                 <span
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleTextChange('email', e.currentTarget.textContent || '')}
-                  className="px-0.5 leading-none"
+                  className="leading-none inline-block"
                 >
                   {header.email || 'your.email@example.com'}
                 </span>
@@ -152,15 +151,13 @@ export default function HeaderSection({ header, onChange, theme }) {
             )}
 
             {settings.showLink && (
-              <div className="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors leading-none">
-                <span className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0 text-[#3b82f6]">
-                  <LinkIcon className="w-3.5 h-3.5" />
-                </span>
+              <div className="contact-pill inline-flex items-center gap-1.5 whitespace-nowrap hover:text-slate-900 transition-colors">
+                <LinkIcon className="w-3.5 h-3.5 text-[#3b82f6] shrink-0 overflow-visible" />
                 <span
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleTextChange('link', e.currentTarget.textContent || '')}
-                  className="px-0.5 leading-none"
+                  className="leading-none inline-block"
                 >
                   {header.link || 'linkedin.com/in/profile'}
                 </span>
@@ -168,15 +165,13 @@ export default function HeaderSection({ header, onChange, theme }) {
             )}
 
             {settings.showExtraLink && (
-              <div className="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors leading-none">
-                <span className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0 text-[#3b82f6]">
-                  <Globe className="w-3.5 h-3.5" />
-                </span>
+              <div className="contact-pill inline-flex items-center gap-1.5 whitespace-nowrap hover:text-slate-900 transition-colors">
+                <Globe className="w-3.5 h-3.5 text-[#3b82f6] shrink-0 overflow-visible" />
                 <span
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleTextChange('extraLink', e.currentTarget.textContent || '')}
-                  className="px-0.5 leading-none"
+                  className="leading-none inline-block"
                 >
                   {header.extraLink || 'github.com/profile'}
                 </span>
@@ -184,15 +179,13 @@ export default function HeaderSection({ header, onChange, theme }) {
             )}
 
             {settings.showLocation && (
-              <div className="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors leading-none">
-                <span className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0 text-[#3b82f6]">
-                  <MapPin className="w-3.5 h-3.5" />
-                </span>
+              <div className="contact-pill inline-flex items-center gap-1.5 whitespace-nowrap hover:text-slate-900 transition-colors">
+                <MapPin className="w-3.5 h-3.5 text-[#3b82f6] shrink-0 overflow-visible" />
                 <span
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleTextChange('location', e.currentTarget.textContent || '')}
-                  className="px-0.5 leading-none"
+                  className="leading-none inline-block"
                 >
                   {header.location || 'City, Country'}
                 </span>
@@ -200,15 +193,13 @@ export default function HeaderSection({ header, onChange, theme }) {
             )}
 
             {settings.showDateOfBirth && (
-              <div className="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors leading-none">
-                <span className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0 text-[#3b82f6]">
-                  <Calendar className="w-3.5 h-3.5" />
-                </span>
+              <div className="contact-pill inline-flex items-center gap-1.5 whitespace-nowrap hover:text-slate-900 transition-colors">
+                <Calendar className="w-3.5 h-3.5 text-[#3b82f6] shrink-0 overflow-visible" />
                 <span
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleTextChange('dateOfBirth', e.currentTarget.textContent || '')}
-                  className="px-0.5 leading-none"
+                  className="leading-none inline-block"
                 >
                   {header.dateOfBirth || 'YYYY-MM-DD'}
                 </span>
@@ -216,15 +207,13 @@ export default function HeaderSection({ header, onChange, theme }) {
             )}
 
             {settings.showNationality && (
-              <div className="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors leading-none">
-                <span className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0 text-[#3b82f6]">
-                  <Flag className="w-3.5 h-3.5" />
-                </span>
+              <div className="contact-pill inline-flex items-center gap-1.5 whitespace-nowrap hover:text-slate-900 transition-colors">
+                <Flag className="w-3.5 h-3.5 text-[#3b82f6] shrink-0 overflow-visible" />
                 <span
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleTextChange('nationality', e.currentTarget.textContent || '')}
-                  className="px-0.5 leading-none"
+                  className="leading-none inline-block"
                 >
                   {header.nationality || 'Nationality'}
                 </span>
@@ -232,15 +221,13 @@ export default function HeaderSection({ header, onChange, theme }) {
             )}
 
             {settings.showExtraField && (
-              <div className="inline-flex items-center gap-1.5 hover:text-slate-900 transition-colors leading-none">
-                <span className="w-3.5 h-3.5 flex items-center justify-center flex-shrink-0 text-[#3b82f6]">
-                  <Sparkles className="w-3.5 h-3.5" />
-                </span>
+              <div className="contact-pill inline-flex items-center gap-1.5 whitespace-nowrap hover:text-slate-900 transition-colors">
+                <Sparkles className="w-3.5 h-3.5 text-[#3b82f6] shrink-0 overflow-visible" />
                 <span
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleTextChange('extraField', e.currentTarget.textContent || '')}
-                  className="px-0.5 leading-none"
+                  className="leading-none inline-block"
                 >
                   {header.extraField || 'Portfolio / Highlights'}
                 </span>

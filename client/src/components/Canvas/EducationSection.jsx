@@ -207,37 +207,35 @@ export default function EducationSection({
                   </div>
                 )}
 
-                {settings.showLocation && item.location && (
-                  <div className="inline-flex items-center gap-1.5 text-[10.5px] text-slate-500 leading-none">
-                    <span className="w-3 h-3 flex items-center justify-center flex-shrink-0 text-slate-400">
-                      <MapPin className="w-3 h-3" />
-                    </span>
-                    <span
-                      contentEditable
-                      suppressContentEditableWarning
-                      onBlur={(e) => handleItemChange(idx, 'location', e.currentTarget.textContent || '')}
-                      className="leading-none"
-                    >
-                      {item.location}
-                    </span>
-                  </div>
-                )}
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10.5px] text-slate-500 pt-0.5">
+                  {settings.showLocation && item.location && (
+                    <div className="resume-icon-badge inline-flex items-center gap-1 whitespace-nowrap">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0 overflow-visible" />
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => handleItemChange(idx, 'location', e.currentTarget.textContent || '')}
+                        className="inline-block leading-none"
+                      >
+                        {item.location}
+                      </span>
+                    </div>
+                  )}
 
-                {settings.showDatePeriod !== false && (
-                  <div className="inline-flex items-center gap-1.5 text-[10.5px] text-slate-500 font-medium pt-0.5 leading-none">
-                    <span className="w-3 h-3 flex items-center justify-center flex-shrink-0 text-slate-400">
-                      <Calendar className="w-3 h-3" />
-                    </span>
-                    <span
-                      contentEditable
-                      suppressContentEditableWarning
-                      onBlur={(e) => handleItemChange(idx, 'dateRange', e.currentTarget.textContent || '')}
-                      className="focus:outline-none leading-none"
-                    >
-                      {item.dateRange}
-                    </span>
-                  </div>
-                )}
+                  {settings.showDatePeriod !== false && (
+                    <div className="resume-icon-badge inline-flex items-center gap-1 font-medium whitespace-nowrap">
+                      <Calendar className="w-3 h-3 text-slate-400 shrink-0 overflow-visible" />
+                      <span
+                        contentEditable
+                        suppressContentEditableWarning
+                        onBlur={(e) => handleItemChange(idx, 'dateRange', e.currentTarget.textContent || '')}
+                        className="focus:outline-none inline-block leading-none"
+                      >
+                        {item.dateRange}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Right Side: GPA Score Badge */}

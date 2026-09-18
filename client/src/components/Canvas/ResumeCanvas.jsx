@@ -223,49 +223,79 @@ export default function ResumeCanvas({ resume, onResumeChange, printRef }) {
   };
 
   // Layout grid split classes
-  let gridColsClass = 'grid-cols-1 md:grid-cols-12 gap-8';
-  let leftSpan = 'md:col-span-7';
-  let rightSpan = 'md:col-span-5';
+  const templateStyle = theme.templateStyle || 'modern-enhancv';
+  const isSidebarLayout = templateStyle === 'sidebar-indigo';
+  const isDarkBanner = templateStyle === 'dark-banner';
+  const isCompactAts = templateStyle === 'compact-ats';
+
+  let gridColsClass = 'grid-cols-12 gap-8';
+  let leftSpan = 'col-span-7';
+  let rightSpan = 'col-span-5';
 
   if (theme.columnLayout === '50-50') {
-    leftSpan = 'md:col-span-6';
-    rightSpan = 'md:col-span-6';
+    leftSpan = 'col-span-6';
+    rightSpan = 'col-span-6';
   } else if (theme.columnLayout === '60-40') {
-    leftSpan = 'md:col-span-7';
-    rightSpan = 'md:col-span-5';
+    leftSpan = 'col-span-7';
+    rightSpan = 'col-span-5';
   } else if (theme.columnLayout === '40-60') {
-    leftSpan = 'md:col-span-5';
-    rightSpan = 'md:col-span-7';
+    leftSpan = 'col-span-5';
+    rightSpan = 'col-span-7';
   } else if (theme.columnLayout === 'single') {
     gridColsClass = 'grid-cols-1 gap-6';
     leftSpan = 'col-span-1';
     rightSpan = 'col-span-1';
   }
 
+  // Template container styling
+  const getContainerStyle = () => {
+    return {
+      fontFamily: theme.fontFamily || 'Inter, sans-serif'
+    };
+  };
+
   return (
     <div className="flex justify-center p-4 sm:p-8 overflow-x-auto">
       {/* A4 Printable Paper Container */}
       <div
         ref={printRef}
-        className="a4-page rounded-sm font-sans"
-        style={{
-          fontFamily: theme.fontFamily || 'Inter, sans-serif'
-        }}
+        className={`a4-page rounded-sm font-sans transition-all duration-200 ${
+          isCompactAts ? 'compact-ats-mode p-6' : ''
+        } ${templateStyle === 'executive-classic' || templateStyle === 'academic-serif' ? 'serif-mode' : ''}`}
+        style={getContainerStyle()}
       >
-        {/* Top Header Section */}
-        <HeaderSection
-          header={resume.header}
-          onChange={handleHeaderChange}
-          theme={theme}
-        />
+        {/* Dark Banner Header Variant */}
+        {isDarkBanner ? (
+          <div className="bg-slate-900 text-white -mx-8 -mt-8 px-8 pt-8 pb-6 mb-6 rounded-t-sm shadow-sm border-b-4 border-sky-400">
+            <HeaderSection
+              header={resume.header}
+              onChange={handleHeaderChange}
+              theme={{ ...theme, primaryColor: '#38bdf8' }}
+              isDarkHeader={true}
+            />
+          </div>
+        ) : (
+          /* Standard Top Header Section */
+          <HeaderSection
+            header={resume.header}
+            onChange={handleHeaderChange}
+            theme={theme}
+          />
+        )}
 
-        {/* Two-Column Grid Layout */}
+        {/* Layout Grid */}
         <div className={`grid ${gridColsClass}`}>
           {/* Left Column */}
-          <div className={leftSpan}>
+          <div
+            className={`${leftSpan} ${
+              isSidebarLayout
+                ? 'bg-indigo-50/60 p-4 rounded-xl border border-indigo-100/80 space-y-2'
+                : ''
+            }`}
+          >
             {(resume.leftColumn || []).map((sec, idx) => renderSection(sec, idx, 'left'))}
 
-            {/* Enhancv Green Pill + New Section Button */}
+            {/* + New Section Button */}
             <div className="pt-2 no-print flex justify-start">
               <button
                 type="button"
@@ -282,17 +312,19 @@ export default function ResumeCanvas({ resume, onResumeChange, printRef }) {
           <div className={rightSpan}>
             {(resume.rightColumn || []).map((sec, idx) => renderSection(sec, idx, 'right'))}
 
-            {/* Enhancv Green Pill + New Section Button */}
-            <div className="pt-2 no-print flex justify-start">
-              <button
-                type="button"
-                onClick={() => setActiveAddModalCol('right')}
-                className="btn-new-section no-print inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-[#00a37e] bg-[#e6faf5] hover:bg-[#00c598] hover:text-white border border-[#00c598]/40 rounded-full transition-all duration-150 shadow-sm"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>New Section</span>
-              </button>
-            </div>
+            {/* + New Section Button */}
+            {theme.columnLayout !== 'single' && (
+              <div className="pt-2 no-print flex justify-start">
+                <button
+                  type="button"
+                  onClick={() => setActiveAddModalCol('right')}
+                  className="btn-new-section no-print inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold text-[#00a37e] bg-[#e6faf5] hover:bg-[#00c598] hover:text-white border border-[#00c598]/40 rounded-full transition-all duration-150 shadow-sm"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>New Section</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

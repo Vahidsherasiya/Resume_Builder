@@ -173,7 +173,7 @@ export default function SkillsSection({
                 {group.skills.map((skill, sIdx) => (
                   <div
                     key={sIdx}
-                    className={`group/tag relative inline-flex items-center text-[11px] font-semibold text-slate-800 transition-colors py-0.5 ${
+                    className={`group/tag relative inline-flex items-center whitespace-nowrap shrink-0 text-[11px] font-semibold text-slate-800 transition-colors py-0.5 ${
                       settings.borderStyle !== 'none' ? 'border-b border-slate-300 hover:border-slate-800' : ''
                     }`}
                   >
@@ -181,7 +181,7 @@ export default function SkillsSection({
                       contentEditable
                       suppressContentEditableWarning
                       onBlur={(e) => handleEditSkill(grpIdx, sIdx, e.currentTarget.textContent || '')}
-                      className="px-0.5 focus:outline-none"
+                      className="px-0.5 focus:outline-none whitespace-nowrap inline-block"
                     >
                       {skill}
                     </span>
@@ -199,7 +199,7 @@ export default function SkillsSection({
                 <button
                   type="button"
                   onClick={() => handleAddSkill(grpIdx)}
-                  className="no-print text-[10.5px] text-[#00c598] hover:text-[#00a37e] font-bold px-1.5 py-0.5 border border-dashed border-[#00c598]/50 rounded hover:border-[#00c598] transition-colors"
+                  className="no-print text-[10.5px] text-[#00c598] hover:text-[#00a37e] font-bold px-1.5 py-0.5 border border-dashed border-[#00c598]/50 rounded hover:border-[#00c598] transition-colors whitespace-nowrap shrink-0"
                 >
                   + Add
                 </button>

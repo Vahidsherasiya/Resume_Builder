@@ -156,15 +156,13 @@ export default function ExperienceSection({
               >
                 {item.company}
               </span>
-              <div className="inline-flex items-center gap-1 text-[10px] text-slate-500 leading-none">
-                <span className="w-3 h-3 flex items-center justify-center flex-shrink-0 text-slate-400">
-                  <Calendar className="w-3 h-3" />
-                </span>
+              <div className="resume-icon-badge inline-flex items-center gap-1 text-[10px] text-slate-500 whitespace-nowrap">
+                <Calendar className="w-3 h-3 text-slate-400 shrink-0 overflow-visible" />
                 <span
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleItemChange(idx, 'dateRange', e.currentTarget.textContent || '')}
-                  className="focus:outline-none leading-none"
+                  className="focus:outline-none inline-block leading-none"
                 >
                   {item.dateRange}
                 </span>

@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import { connectDB } from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(morgan('dev'));
 
 // API Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/resumes', resumeRoutes);
 
 // Health check endpoint

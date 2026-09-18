@@ -13,14 +13,14 @@ export const defaultResume = {
     borderStyle: 'solid'
   },
   header: {
-    name: 'M VAHID SHERASIYA',
-    title: 'B.Tech CSE Candidate',
-    phone: '+91 9313409929',
-    email: 'vahidsherasiya820@gmail.com',
-    link: 'linkedin.com/in/m-vahid-sherasiya-3a5047380',
-    extraLink: 'github.com/vahid-sherasiya',
-    location: 'Gujarat, India',
-    extraField: 'Portfolio: vahid.dev',
+    name: 'JOHNATHAN DOE',
+    title: 'Senior Full Stack Engineer',
+    phone: '+1 (555) 019-2834',
+    email: 'johnathan.doe@example.com',
+    link: 'linkedin.com/in/johnathan-doe',
+    extraLink: 'github.com/johndoe-dev',
+    location: 'San Francisco, CA',
+    extraField: 'Portfolio: johndoe.dev',
     dateOfBirth: '2004-05-15',
     nationality: 'Indian',
     avatarUrl: '',
@@ -65,33 +65,23 @@ export const defaultResume = {
       items: [
         {
           id: 'edu-1',
-          degree: 'B.Tech in Computer Science',
-          institution: 'Darshan University',
-          dateRange: '08/2022 - 05/2026',
-          location: 'Rajkot, Gujarat',
-          gpa: '4.0',
+          degree: 'B.S. in Computer Science',
+          institution: 'Stanford University',
+          dateRange: '08/2020 - 05/2024',
+          location: 'Stanford, CA',
+          gpa: '3.9',
           gpaMax: '4.0',
-          details: 'Focus on Data Structures, Web Technologies, Database Systems & Cloud Computing.'
+          details: 'Focus on Data Structures, Cloud Computing, Distributed Systems & Modern Web Frameworks.'
         },
         {
           id: 'edu-2',
-          degree: 'HSC (Higher Secondary)',
-          institution: 'Modern School, Wankaner',
-          dateRange: '05/2022 - 05/2022',
-          location: 'Wankaner, Gujarat',
+          degree: 'High School Diploma',
+          institution: 'Oakridge Academic Academy',
+          dateRange: '05/2018 - 05/2020',
+          location: 'San Jose, CA',
           gpa: '4.0',
           gpaMax: '4.0',
-          details: 'Science Stream with Mathematics and Computer Studies.'
-        },
-        {
-          id: 'edu-3',
-          degree: 'SSC (Secondary School)',
-          institution: 'Sanskruti Vidyalay School, Wankaner',
-          dateRange: '05/2020 - 05/2020',
-          location: 'Wankaner, Gujarat',
-          gpa: '4.0',
-          gpaMax: '4.0',
-          details: 'Passed with Distinction.'
+          details: 'Advanced Placement in Computer Science and Mathematics.'
         }
       ]
     },

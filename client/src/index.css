@@ -22,6 +22,41 @@
   transition: all 0.2s ease-in-out;
 }
 
+/* Serif Mode for Executive / Academic Templates */
+.serif-mode h1,
+.serif-mode h2,
+.serif-mode h3,
+.serif-mode h4,
+.serif-mode .section-title {
+  font-family: 'Merriweather', Georgia, serif;
+}
+
+/* Compact ATS Mode for 1-Page tight fits */
+.compact-ats-mode {
+  padding: 12mm 14mm !important;
+  font-size: 0.95em;
+}
+
+.compact-ats-mode .group {
+  margin-bottom: 0.75rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+@keyframes pulseSubtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.92;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 3s infinite ease-in-out;
+}
+
 /* Global Hidden Print / PDF Export Styles */
 .exporting-pdf .no-print,
 .exporting-pdf .hover-action-bar,
@@ -34,6 +69,18 @@
   outline: none !important;
   background-color: transparent !important;
   box-shadow: none !important;
+}
+
+.exporting-pdf .a4-page,
+.a4-page.exporting-pdf {
+  margin: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  box-shadow: none !important;
+  transform: none !important;
+  border-radius: 0 !important;
 }
 
 @media print {
@@ -84,6 +131,44 @@
 [contenteditable="true"]:focus {
   background-color: rgba(0, 197, 152, 0.12);
   outline: 1.5px solid #00c598;
+}
+
+/* Pixel-Perfect Contact Pill & Icon Alignment */
+.contact-pill,
+.resume-icon-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+}
+
+.contact-pill svg,
+.resume-icon-badge svg,
+.exporting-pdf svg {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  flex-shrink: 0 !important;
+  overflow: visible !important;
+  position: static !important;
+}
+
+.contact-pill span,
+.resume-icon-badge span {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  line-height: 1 !important;
+}
+
+/* Export PDF Adjustments */
+.exporting-pdf .contact-pill,
+.exporting-pdf .resume-icon-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
 }
 
 /* Smooth custom scrollbars */
