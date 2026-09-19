@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
 import { connectDB } from './config/db.js';
-import authRoutes from './routes/authRoutes.js';
+import authRoutes, { seedDefaultUsers } from './routes/authRoutes.js';
 import resumeRoutes from './routes/resumeRoutes.js';
 
 dotenv.config();
@@ -11,8 +11,12 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Connect to Database
-connectDB();
+// Connect to Database & Seed default users
+connectDB().then((connected) => {
+  if (connected) {
+    seedDefaultUsers();
+  }
+});
 
 // Middleware
 app.use(cors());

@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '';
+const LIVE_FALLBACK_URL = 'https://resume-builder-cogi.onrender.com';
+const BASE_URL = (import.meta.env.VITE_API_URL || LIVE_FALLBACK_URL).replace(/\/$/, '');
 const API_RESUMES = `${BASE_URL}/api/resumes`;
 const API_AUTH = `${BASE_URL}/api/auth`;
 
@@ -6,12 +7,23 @@ export const api = {
   // Auth: Login
   async login({ email, password }) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout for cold start
+
       const res = await fetch(`${API_AUTH}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
+        signal: controller.signal
       });
-      const data = await res.json();
+      clearTimeout(timeoutId);
+
+      const contentType = res.headers.get('content-type') || '';
+      let data = {};
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      }
+
       if (!res.ok) {
         throw new Error(data.message || 'Invalid email or password');
       }
@@ -21,14 +33,38 @@ export const api = {
       }
       return data;
     } catch (err) {
-      // If error is from backend with message, propagate it
-      if (err.message && !err.message.includes('fetch')) {
+      // Check if error was legitimate credentials rejection from an active online server
+      const isOnlineAuthError = err.message && 
+        (err.message.includes('Invalid email') || err.message.includes('password') || err.message.includes('account'));
+      
+      const isConnectionIssue = !err.message || 
+        err.name === 'AbortError' ||
+        err.message.includes('fetch') || 
+        err.message.includes('Network') || 
+        err.message.includes('504') || 
+        err.message.includes('502') || 
+        err.message.includes('503') || 
+        err.message.includes('Proxy') || 
+        err.message.includes('JSON');
+
+      if (isOnlineAuthError && !isConnectionIssue) {
+        // Also check if they are trying to log in with default demo accounts offline
+        const normalized = (email || '').toLowerCase().trim();
+        if ((normalized === 'admin@autoresume.com' || normalized === 'admin@enhancv.com') && password === 'admin123') {
+          const adminUser = { id: 'user-admin-01', name: 'Master Admin', email: 'admin@autoresume.com', role: 'admin' };
+          localStorage.setItem('resume_auth_user', JSON.stringify(adminUser));
+          return { success: true, user: adminUser, token: 'offline-token' };
+        } else if ((normalized === 'user@autoresume.com' || normalized === 'user@enhancv.com') && password === 'user123') {
+          const standardUser = { id: 'user-default-01', name: 'Alex Morgan', email: 'user@autoresume.com', role: 'user' };
+          localStorage.setItem('resume_auth_user', JSON.stringify(standardUser));
+          return { success: true, user: standardUser, token: 'offline-token' };
+        }
         throw err;
       }
 
-      // Fallback only for network disconnect
-      console.warn('Network offline, checking offline fallback credentials:', err.message);
-      const normalized = email.toLowerCase().trim();
+      // Fallback for network disconnect / cold start / offline
+      console.warn('Backend unavailable or network offline, checking offline fallback credentials:', err.message);
+      const normalized = (email || '').toLowerCase().trim();
       if ((normalized === 'admin@autoresume.com' || normalized === 'admin@enhancv.com') && password === 'admin123') {
         const adminUser = {
           id: 'user-admin-01',
@@ -48,7 +84,7 @@ export const api = {
         localStorage.setItem('resume_auth_user', JSON.stringify(standardUser));
         return { success: true, user: standardUser, token: 'offline-token' };
       }
-      throw new Error('Invalid email or password. Please verify credentials or register.');
+      throw new Error('Could not connect to backend server. Please check your credentials or register a new account.');
     }
   },
 

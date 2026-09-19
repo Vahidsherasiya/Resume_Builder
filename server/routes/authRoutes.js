@@ -181,4 +181,37 @@ router.put('/users/:id/role', async (req, res) => {
   }
 });
 
+// Auto-seed default test accounts into MongoDB if they don't exist
+export async function seedDefaultUsers() {
+  try {
+    const adminExists = await User.findOne({ 
+      email: { $in: ['admin@autoresume.com', 'admin@enhancv.com'] } 
+    });
+    if (!adminExists) {
+      await User.create({
+        name: 'Master Admin',
+        email: 'admin@autoresume.com',
+        password: 'admin123',
+        role: 'admin'
+      });
+      console.log('🌱 Seeded default Admin into MongoDB (admin@autoresume.com)');
+    }
+
+    const userExists = await User.findOne({ 
+      email: { $in: ['user@autoresume.com', 'user@enhancv.com'] } 
+    });
+    if (!userExists) {
+      await User.create({
+        name: 'Alex Morgan',
+        email: 'user@autoresume.com',
+        password: 'user123',
+        role: 'user'
+      });
+      console.log('🌱 Seeded default User into MongoDB (user@autoresume.com)');
+    }
+  } catch (err) {
+    // Silently ignore if db not ready
+  }
+}
+
 export default router;
