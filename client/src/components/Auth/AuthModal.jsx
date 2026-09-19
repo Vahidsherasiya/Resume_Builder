@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { 
-  Lock, Mail, User, ArrowRight, ShieldCheck, 
-  Sparkles, CheckCircle, Shield, KeyRound, AlertCircle, Info 
+import {
+  Lock, Mail, User, ArrowRight, ShieldCheck,
+  Sparkles, CheckCircle, Shield, KeyRound, AlertCircle, Info
 } from 'lucide-react';
 import { api } from '../../services/api';
 import AutoResumeLogo from '../UI/AutoResumeLogo';
@@ -54,13 +54,6 @@ export default function AuthModal({ onLoginSuccess }) {
     }
   };
 
-  const handleFillCredentials = (fillEmail, fillPassword) => {
-    setEmail(fillEmail);
-    setPassword(fillPassword);
-    setIsRegister(false);
-    setErrorMsg('');
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 sm:p-6 overflow-y-auto">
       <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col md:flex-row animate-popover">
@@ -72,11 +65,11 @@ export default function AuthModal({ onLoginSuccess }) {
 
           <div className="relative z-10">
             {/* Logo */}
-            <AutoResumeLogo 
-              size="lg" 
-              theme="light-text" 
-              badge="A4 Pro" 
-              className="mb-8" 
+            <AutoResumeLogo
+              size="lg"
+              theme="light-text"
+              badge="A4 Pro"
+              className="mb-8"
             />
 
             <h2 className="text-2xl font-black tracking-tight leading-snug mb-3">
@@ -201,44 +194,6 @@ export default function AuthModal({ onLoginSuccess }) {
               </button>
             </form>
 
-            {/* Hint Chips for Verified Accounts */}
-            <div className="mt-5 p-3 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
-                  <Info className="w-3 h-3 text-slate-400" />
-                  <span>Verified Test Accounts</span>
-                </span>
-                <span className="text-[10px] text-slate-400">Click to fill</span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-[11px]">
-                <button
-                  type="button"
-                  onClick={() => handleFillCredentials('admin@autoresume.com', 'admin123')}
-                  className="p-2 bg-white hover:bg-purple-50 rounded-xl border border-slate-200 hover:border-purple-300 text-left transition-colors"
-                >
-                  <div className="flex items-center gap-1 font-bold text-purple-700">
-                    <Shield className="w-3 h-3" />
-                    <span>Admin</span>
-                  </div>
-                  <div className="text-[10px] text-slate-500 truncate">admin@autoresume.com</div>
-                  <div className="text-[9px] text-slate-400 font-mono">admin123</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleFillCredentials('user@autoresume.com', 'user123')}
-                  className="p-2 bg-white hover:bg-emerald-50 rounded-xl border border-slate-200 hover:border-emerald-300 text-left transition-colors"
-                >
-                  <div className="flex items-center gap-1 font-bold text-emerald-700">
-                    <User className="w-3 h-3" />
-                    <span>User</span>
-                  </div>
-                  <div className="text-[10px] text-slate-500 truncate">user@autoresume.com</div>
-                  <div className="text-[9px] text-slate-400 font-mono">user123</div>
-                </button>
-              </div>
-            </div>
-
             <div className="mt-5 text-center">
               <button
                 type="button"
@@ -250,7 +205,7 @@ export default function AuthModal({ onLoginSuccess }) {
               >
                 {isRegister
                   ? 'Already have an account? Log in'
-                  : "Don't have an account? Sign up (Default role: User)"}
+                  : "Don't have an account? Sign up"}
               </button>
             </div>
           </div>
