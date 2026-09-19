@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Enhancv Resume Builder Backend API",
+  "description": "AutoResume Builder Backend API",
   "main": "server.js",
   "type": "module",
   "scripts": {

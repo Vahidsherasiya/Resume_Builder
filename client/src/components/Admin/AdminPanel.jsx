@@ -5,6 +5,7 @@ import {
   Search, ShieldAlert, ArrowRight, Eye, RefreshCw 
 } from 'lucide-react';
 import { api } from '../../services/api';
+import AutoResumeLogo from '../UI/AutoResumeLogo';
 
 export default function AdminPanel({ 
   currentUser, 
@@ -204,11 +205,11 @@ export default function AdminPanel({
     <div className="min-h-[calc(100vh-4rem)] bg-[#f3f6f9] py-8 sm:py-12 px-4 sm:px-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header Title */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 text-white rounded-3xl p-8 border border-slate-800 shadow-xl">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#00c598]/20 text-[#00c598] rounded-full text-xs font-bold border border-[#00c598]/30 mb-3">
-              <Shield className="w-3.5 h-3.5" />
-              <span>Admin Management Portal</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 text-white rounded-3xl p-8 border border-slate-800 shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-[#00c598]/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+          <div className="relative z-10">
+            <div className="mb-3">
+              <AutoResumeLogo size="sm" theme="light-text" badge="Admin Center" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
               Control Panel & Template Publisher

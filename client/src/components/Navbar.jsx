@@ -8,8 +8,10 @@ import confetti from 'canvas-confetti';
 import RearrangeSectionsModal from './Modals/RearrangeSectionsModal';
 import TemplateSelectorModal from './Modals/TemplateSelectorModal';
 
+import AutoResumeLogo from './UI/AutoResumeLogo';
+
 const THEME_COLORS = [
-  { name: 'Teal (Enhancv)', value: '#00c598' },
+  { name: 'AutoResume Teal', value: '#00c598' },
   { name: 'Ocean Blue', value: '#0284c7' },
   { name: 'Royal Indigo', value: '#4f46e5' },
   { name: 'Emerald Green', value: '#059669' },
@@ -94,22 +96,13 @@ export default function Navbar({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
         {/* Left: Logo & Navigation Tabs */}
         <div className="flex items-center gap-3">
-          <div 
-            onClick={() => onNavigateView('dashboard')}
-            className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00a37e] to-[#00c598] flex items-center justify-center text-white font-black text-lg shadow-sm cursor-pointer"
-          >
-            E
-          </div>
-          <div>
-            <div 
-              onClick={() => onNavigateView('dashboard')}
-              className="flex items-center gap-2 cursor-pointer"
-            >
-              <span className="font-extrabold text-slate-900 tracking-tight text-base">
-                Enhancv <span className="text-[#00c598] font-medium text-xs bg-[#e6faf5] px-2 py-0.5 rounded-full border border-[#00c598]/30">A4 Builder</span>
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 hidden sm:block">
+          <div className="flex flex-col">
+            <AutoResumeLogo 
+              onClick={() => onNavigateView('dashboard')} 
+              badge="A4 Builder"
+              size="md"
+            />
+            <p className="text-[10px] text-slate-400 font-medium pl-11 -mt-1 hidden sm:block">
               Pixel-perfect MERN Resume & Live Editor
             </p>
           </div>

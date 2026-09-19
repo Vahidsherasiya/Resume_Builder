@@ -25,9 +25,9 @@ app.use('/api/resumes', resumeRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', service: 'Enhancv Resume Builder API' });
+  res.json({ status: 'ok', service: 'AutoResume Builder API' });
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Enhancv Resume Server running at http://localhost:${PORT}`);
+  console.log(`🚀 AutoResume Server running at http://localhost:${PORT}`);
 });

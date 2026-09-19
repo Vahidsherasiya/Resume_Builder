@@ -1,4 +1,4 @@
-# 📄 Enhancv Resume Builder (Full-Stack MERN Application)
+# 📄 AutoResume Builder (Full-Stack MERN Application)
 
 A modern, interactive, and customizable Resume Builder built with React, Tailwind CSS, Vite, Node.js, Express, and MongoDB.
 

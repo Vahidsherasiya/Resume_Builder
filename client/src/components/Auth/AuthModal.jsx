@@ -4,6 +4,7 @@ import {
   Sparkles, CheckCircle, Shield, KeyRound, AlertCircle, Info 
 } from 'lucide-react';
 import { api } from '../../services/api';
+import AutoResumeLogo from '../UI/AutoResumeLogo';
 
 export default function AuthModal({ onLoginSuccess }) {
   const [isRegister, setIsRegister] = useState(false);
@@ -71,17 +72,12 @@ export default function AuthModal({ onLoginSuccess }) {
 
           <div className="relative z-10">
             {/* Logo */}
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#00a37e] to-[#00c598] flex items-center justify-center text-white font-black text-xl shadow-lg shadow-[#00c598]/30">
-                E
-              </div>
-              <div>
-                <span className="font-extrabold text-lg text-white tracking-tight">Enhancv</span>
-                <span className="text-[#00c598] font-bold text-xs bg-[#00c598]/20 ml-2 px-2 py-0.5 rounded-full border border-[#00c598]/30">
-                  A4 Pro
-                </span>
-              </div>
-            </div>
+            <AutoResumeLogo 
+              size="lg" 
+              theme="light-text" 
+              badge="A4 Pro" 
+              className="mb-8" 
+            />
 
             <h2 className="text-2xl font-black tracking-tight leading-snug mb-3">
               Build Dream Resumes That Get You Hired.
@@ -217,27 +213,27 @@ export default function AuthModal({ onLoginSuccess }) {
               <div className="grid grid-cols-2 gap-2 text-[11px]">
                 <button
                   type="button"
-                  onClick={() => handleFillCredentials('admin@enhancv.com', 'admin123')}
+                  onClick={() => handleFillCredentials('admin@autoresume.com', 'admin123')}
                   className="p-2 bg-white hover:bg-purple-50 rounded-xl border border-slate-200 hover:border-purple-300 text-left transition-colors"
                 >
                   <div className="flex items-center gap-1 font-bold text-purple-700">
                     <Shield className="w-3 h-3" />
                     <span>Admin</span>
                   </div>
-                  <div className="text-[10px] text-slate-500 truncate">admin@enhancv.com</div>
+                  <div className="text-[10px] text-slate-500 truncate">admin@autoresume.com</div>
                   <div className="text-[9px] text-slate-400 font-mono">admin123</div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => handleFillCredentials('user@enhancv.com', 'user123')}
+                  onClick={() => handleFillCredentials('user@autoresume.com', 'user123')}
                   className="p-2 bg-white hover:bg-emerald-50 rounded-xl border border-slate-200 hover:border-emerald-300 text-left transition-colors"
                 >
                   <div className="flex items-center gap-1 font-bold text-emerald-700">
                     <User className="w-3 h-3" />
                     <span>User</span>
                   </div>
-                  <div className="text-[10px] text-slate-500 truncate">user@enhancv.com</div>
+                  <div className="text-[10px] text-slate-500 truncate">user@autoresume.com</div>
                   <div className="text-[9px] text-slate-400 font-mono">user123</div>
                 </button>
               </div>

@@ -3,7 +3,7 @@ export const defaultResume = {
   title: 'MERN Stack Developer Resume',
   lastModified: new Date().toISOString(),
   theme: {
-    primaryColor: '#00c598', // Enhancv Teal
+    primaryColor: '#00c598', // AutoResume Teal
     secondaryColor: '#1e293b',
     accentColor: '#00c598',
     fontFamily: 'Inter',

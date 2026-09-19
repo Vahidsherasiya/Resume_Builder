@@ -29,20 +29,20 @@ export const api = {
       // Fallback only for network disconnect
       console.warn('Network offline, checking offline fallback credentials:', err.message);
       const normalized = email.toLowerCase().trim();
-      if (normalized === 'admin@enhancv.com' && password === 'admin123') {
+      if ((normalized === 'admin@autoresume.com' || normalized === 'admin@enhancv.com') && password === 'admin123') {
         const adminUser = {
           id: 'user-admin-01',
           name: 'Master Admin',
-          email: 'admin@enhancv.com',
+          email: 'admin@autoresume.com',
           role: 'admin'
         };
         localStorage.setItem('resume_auth_user', JSON.stringify(adminUser));
         return { success: true, user: adminUser, token: 'offline-token' };
-      } else if (normalized === 'user@enhancv.com' && password === 'user123') {
+      } else if ((normalized === 'user@autoresume.com' || normalized === 'user@enhancv.com') && password === 'user123') {
         const standardUser = {
           id: 'user-default-01',
           name: 'Alex Morgan',
-          email: 'user@enhancv.com',
+          email: 'user@autoresume.com',
           role: 'user'
         };
         localStorage.setItem('resume_auth_user', JSON.stringify(standardUser));
@@ -79,7 +79,7 @@ export const api = {
         id: `user-${Date.now()}`,
         name,
         email: normalized,
-        role: normalized === 'admin@enhancv.com' ? 'admin' : 'user'
+        role: (normalized === 'admin@autoresume.com' || normalized === 'admin@enhancv.com') ? 'admin' : 'user'
       };
       localStorage.setItem('resume_auth_user', JSON.stringify(newUser));
       return { success: true, user: newUser, token: 'offline-token' };
@@ -133,8 +133,8 @@ export const api = {
       const cached = localStorage.getItem('admin_users_list');
       if (cached) return JSON.parse(cached);
       return [
-        { id: 'u1', name: 'Admin Manager', email: 'admin@enhancv.com', role: 'admin', createdAt: new Date().toISOString() },
-        { id: 'u2', name: 'Alex Morgan', email: 'demo@enhancv.com', role: 'user', createdAt: new Date().toISOString() },
+        { id: 'u1', name: 'Admin Manager', email: 'admin@autoresume.com', role: 'admin', createdAt: new Date().toISOString() },
+        { id: 'u2', name: 'Alex Morgan', email: 'user@autoresume.com', role: 'user', createdAt: new Date().toISOString() },
         { id: 'u3', name: 'Sarah Jenkins', email: 'sarah.j@example.com', role: 'user', createdAt: new Date(Date.now() - 86400000).toISOString() }
       ];
     }

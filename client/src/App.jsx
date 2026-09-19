@@ -374,7 +374,7 @@ export default function App() {
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
       pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${resume.header?.name?.replace(/\s+/g, '_') || 'Resume'}_Enhancv.pdf`);
+      pdf.save(`${resume.header?.name?.replace(/\s+/g, '_') || 'Resume'}_AutoResume.pdf`);
       showToast('PDF downloaded successfully! (Download count updated)', 'success');
     } catch (err) {
       console.error('PDF Generation error:', err);

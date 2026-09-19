@@ -1,7 +1,7 @@
 export const RESUME_TEMPLATES = [
   {
     id: 'template-modern-enhancv',
-    name: 'Modern Enhancv',
+    name: 'AutoResume Modern',
     category: 'Modern',
     badge: 'Popular',
     description: 'Clean dual-column layout with vibrant teal accents, tags, and progress meters.',

@@ -8,7 +8,7 @@ const memoryUsers = [
   {
     id: 'user-admin-01',
     name: 'Master Admin',
-    email: 'admin@enhancv.com',
+    email: 'admin@autoresume.com',
     password: 'admin123',
     role: 'admin',
     createdAt: new Date().toISOString()
@@ -16,7 +16,7 @@ const memoryUsers = [
   {
     id: 'user-default-01',
     name: 'Alex Morgan',
-    email: 'user@enhancv.com',
+    email: 'user@autoresume.com',
     password: 'user123',
     role: 'user',
     createdAt: new Date().toISOString()
@@ -40,8 +40,8 @@ router.post('/register', async (req, res) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    // Default role is ALWAYS 'user', only admin@enhancv.com can be admin
-    const userRole = normalizedEmail === 'admin@enhancv.com' ? 'admin' : 'user';
+    // Default role is 'user', admin@autoresume.com or admin@enhancv.com is 'admin'
+    const userRole = (normalizedEmail === 'admin@autoresume.com' || normalizedEmail === 'admin@enhancv.com') ? 'admin' : 'user';
 
     // Try MongoDB
     try {

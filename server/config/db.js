@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 export const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/enhancv_resume', {
+    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/autoresume_db', {
       serverSelectionTimeoutMS: 2500
     });
     console.log(`[MongoDB Connected]: ${conn.connection.host}`);
