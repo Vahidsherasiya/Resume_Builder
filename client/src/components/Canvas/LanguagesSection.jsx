@@ -113,12 +113,12 @@ export default function LanguagesSection({
             }`}
           >
             {/* Left: Language Name and Proficiency */}
-            <div>
+            <div className="flex flex-col justify-center min-w-0 flex-1 pr-3">
               <div
                 contentEditable
                 suppressContentEditableWarning
                 onBlur={(e) => handleItemChange(idx, 'language', e.currentTarget.textContent || '')}
-                className="text-xs font-bold text-slate-900 focus:outline-none leading-snug"
+                className="block text-xs font-bold text-slate-900 focus:outline-none leading-normal"
               >
                 {item.language}
               </div>
@@ -128,7 +128,7 @@ export default function LanguagesSection({
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleItemChange(idx, 'proficiency', e.currentTarget.textContent || '')}
-                  className="text-[10.5px] text-slate-500 font-medium focus:outline-none leading-snug"
+                  className="block text-[10.5px] text-slate-500 font-medium focus:outline-none leading-normal mt-0.5"
                 >
                   {item.proficiency}
                 </div>

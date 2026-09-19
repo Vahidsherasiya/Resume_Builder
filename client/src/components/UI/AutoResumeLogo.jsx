@@ -31,7 +31,7 @@ export default function AutoResumeLogo({
       className={`inline-flex items-center ${currentSize.gap} select-none ${onClick ? 'cursor-pointer' : ''} ${className}`}
     >
       {/* Dynamic Vector Icon */}
-      <div className={`relative ${currentSize.icon} flex items-center justify-center rounded-2xl bg-gradient-to-tr from-[#009b77] via-[#00c598] to-[#38bdf8] p-[1.5px] shadow-md shadow-[#00c598]/20 transition-transform duration-200 hover:scale-105`}>
+      <div className={`relative ${currentSize.icon} shrink-0 flex items-center justify-center rounded-2xl bg-gradient-to-tr from-[#009b77] via-[#00c598] to-[#38bdf8] p-[1.5px] shadow-md shadow-[#00c598]/20 transition-transform duration-200 hover:scale-105`}>
         <div className="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center overflow-hidden relative">
           {/* Subtle internal gradient glow */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#00c598]/25 via-transparent to-indigo-500/25 pointer-events-none" />
@@ -55,7 +55,7 @@ export default function AutoResumeLogo({
             />
             {/* Auto Lightning / Sparkle Accent */}
             <path 
-              d="M21 9L23 5L25 9L29 11L25 13L23 17L21 13L17 11L21 9Z" 
+              d="M21 9L23 5L25 9L29 11L25 13L23 17L21 9Z" 
               fill="url(#sparkle-grad)" 
               transform="scale(0.35) translate(30, 8)"
             />
@@ -83,7 +83,7 @@ export default function AutoResumeLogo({
 
       {/* Typography / Brand Name */}
       {variant !== 'icon' && (
-        <div className="flex items-center">
+        <div className="flex items-center shrink-0">
           <div className="flex items-center tracking-tight font-extrabold leading-none">
             <span className={`${currentSize.text} ${isLightText ? 'text-white' : 'text-slate-900'} font-black tracking-tight`}>
               Auto
@@ -94,7 +94,7 @@ export default function AutoResumeLogo({
           </div>
 
           {badge && (
-            <span className={`ml-2 font-bold ${currentSize.badge} rounded-full border transition-all ${
+            <span className={`ml-2 hidden sm:inline-flex items-center font-bold ${currentSize.badge} rounded-full border transition-all ${
               isLightText
                 ? 'bg-[#00c598]/20 text-[#34d399] border-[#00c598]/40'
                 : 'bg-emerald-50 text-[#009b77] border-emerald-200/80'

@@ -251,11 +251,11 @@ export default function AdminPanel({
         )}
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+        <div className="flex items-center gap-2 border-b border-slate-200 pb-2 overflow-x-auto no-scrollbar">
           <button
             type="button"
             onClick={() => setActiveTab('users')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               activeTab === 'users'
                 ? 'bg-slate-900 text-white shadow-md'
                 : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
@@ -268,33 +268,33 @@ export default function AdminPanel({
           <button
             type="button"
             onClick={() => setActiveTab('new-template')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               activeTab === 'new-template'
                 ? 'bg-slate-900 text-white shadow-md'
                 : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
             }`}
           >
             <Plus className="w-4 h-4 text-[#00c598]" />
-            <span>Upload / Add New Template</span>
+            <span>Upload Template</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('templates')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
               activeTab === 'templates'
                 ? 'bg-slate-900 text-white shadow-md'
                 : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
             }`}
           >
             <Layout className="w-4 h-4 text-[#00c598]" />
-            <span>All Published Templates ({templates.length})</span>
+            <span>Published Templates ({templates.length})</span>
           </button>
         </div>
 
         {/* Tab 1: All Users & Role Change */}
         {activeTab === 'users' && (
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm space-y-4 p-6">
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm space-y-4 p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold text-slate-900">User Management</h3>
@@ -316,8 +316,57 @@ export default function AdminPanel({
               </div>
             </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
+            {/* Mobile User Card List */}
+            <div className="block md:hidden space-y-3">
+              {filteredUsers.map((u) => {
+                const isAdmin = u.role === 'admin';
+                return (
+                  <div key={u.id || u._id} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+                          {u.name ? u.name[0].toUpperCase() : 'U'}
+                        </div>
+                        <div>
+                          <div className="font-bold text-xs text-slate-900">{u.name || 'Anonymous User'}</div>
+                          <div className="text-[11px] text-slate-500">{u.email}</div>
+                        </div>
+                      </div>
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          isAdmin
+                            ? 'bg-purple-100 text-purple-700 border border-purple-300'
+                            : 'bg-slate-200/80 text-slate-700 border border-slate-300'
+                        }`}
+                      >
+                        {isAdmin && <Shield className="w-3 h-3 text-purple-600" />}
+                        <span>{u.role ? u.role.toUpperCase() : 'USER'}</span>
+                      </span>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                      <span className="text-[10px] text-slate-400">
+                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'Active'}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleRoleChange(u.id || u._id, isAdmin ? 'user' : 'admin')}
+                        className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                          isAdmin
+                            ? 'bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200'
+                            : 'bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200'
+                        }`}
+                      >
+                        {isAdmin ? 'Demote to User' : 'Promote to Admin'}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop Table */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50/50">
@@ -379,7 +428,7 @@ export default function AdminPanel({
 
         {/* Tab 2: Upload / Add New Design Template */}
         {activeTab === 'new-template' && (
-          <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm space-y-6">
+          <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-8 shadow-sm space-y-6">
             <div>
               <h3 className="text-xl font-bold text-slate-900">
                 Upload / Create New Design Template

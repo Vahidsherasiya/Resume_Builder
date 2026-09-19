@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Download, Printer, Save, RefreshCw, Palette, 
   Type, LayoutGrid, Check, Sparkles, Cloud, Share2, 
@@ -91,27 +92,169 @@ export default function Navbar({
     onDownloadPdf();
   };
 
+  const renderMobileSheets = () => {
+    if (typeof document === 'undefined') return null;
+
+    return createPortal(
+      <>
+        {/* Mobile Color Picker Sheet */}
+        {showColorPicker && (
+          <div
+            className="md:hidden fixed inset-0 z-[9999] bg-slate-950/65 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 animate-popover"
+            onClick={() => setShowColorPicker(false)}
+          >
+            <div
+              className="w-full max-w-sm bg-white rounded-2xl p-4 shadow-2xl border border-slate-200 space-y-3"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <Palette className="w-4 h-4 text-[#00c598]" />
+                  <span className="text-sm font-bold text-slate-800">Accent Color</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowColorPicker(false)}
+                  className="text-xs font-bold text-slate-400 hover:text-slate-700 p-1"
+                >
+                  Close
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {THEME_COLORS.map((c) => (
+                  <button
+                    key={c.value}
+                    onClick={() => {
+                      updateTheme({ primaryColor: c.value });
+                      setShowColorPicker(false);
+                    }}
+                    className={`flex items-center gap-2.5 p-2.5 rounded-xl border text-xs font-semibold transition-all ${
+                      theme.primaryColor === c.value
+                        ? 'border-[#00c598] bg-[#e6faf5] text-[#00a37e]'
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                    }`}
+                  >
+                    <span className="w-4 h-4 rounded-full ring-1 ring-black/10 shrink-0" style={{ backgroundColor: c.value }} />
+                    <span className="truncate">{c.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Font Picker Sheet */}
+        {showFontPicker && (
+          <div
+            className="md:hidden fixed inset-0 z-[9999] bg-slate-950/65 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 animate-popover"
+            onClick={() => setShowFontPicker(false)}
+          >
+            <div
+              className="w-full max-w-sm bg-white rounded-2xl p-4 shadow-2xl border border-slate-200 space-y-3"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <Type className="w-4 h-4 text-[#00c598]" />
+                  <span className="text-sm font-bold text-slate-800">Choose Typography</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowFontPicker(false)}
+                  className="text-xs font-bold text-slate-400 hover:text-slate-700 p-1"
+                >
+                  Close
+                </button>
+              </div>
+              <div className="space-y-1.5">
+                {FONTS.map((f) => (
+                  <button
+                    key={f.value}
+                    onClick={() => {
+                      updateTheme({ fontFamily: f.value });
+                      setShowFontPicker(false);
+                    }}
+                    className={`w-full flex items-center justify-between p-2.5 rounded-xl border text-xs font-semibold transition-all ${
+                      theme.fontFamily === f.value
+                        ? 'border-[#00c598] bg-[#e6faf5] text-[#00a37e]'
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                    }`}
+                  >
+                    <span style={{ fontFamily: f.value }}>{f.name}</span>
+                    {theme.fontFamily === f.value && <Check className="w-4 h-4 text-[#00c598]" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Layout Picker Sheet */}
+        {showLayoutPicker && (
+          <div
+            className="md:hidden fixed inset-0 z-[9999] bg-slate-950/65 backdrop-blur-xs flex items-end sm:items-center justify-center p-3 animate-popover"
+            onClick={() => setShowLayoutPicker(false)}
+          >
+            <div
+              className="w-full max-w-sm bg-white rounded-2xl p-4 shadow-2xl border border-slate-200 space-y-3"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <LayoutGrid className="w-4 h-4 text-[#00c598]" />
+                  <span className="text-sm font-bold text-slate-800">Column Layout</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowLayoutPicker(false)}
+                  className="text-xs font-bold text-slate-400 hover:text-slate-700 p-1"
+                >
+                  Close
+                </button>
+              </div>
+              <div className="space-y-1.5">
+                {LAYOUTS.map((l) => (
+                  <button
+                    key={l.value}
+                    onClick={() => {
+                      updateTheme({ columnLayout: l.value });
+                      setShowLayoutPicker(false);
+                    }}
+                    className={`w-full flex items-center justify-between p-2.5 rounded-xl border text-xs font-semibold transition-all ${
+                      theme.columnLayout === l.value
+                        ? 'border-[#00c598] bg-[#e6faf5] text-[#00a37e]'
+                        : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                    }`}
+                  >
+                    <span>{l.label}</span>
+                    {theme.columnLayout === l.value && <Check className="w-4 h-4 text-[#00c598]" />}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </>,
+      document.body
+    );
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm no-print">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
         {/* Left: Logo & Navigation Tabs */}
-        <div className="flex items-center gap-3">
-          <div className="flex flex-col">
-            <AutoResumeLogo 
-              onClick={() => onNavigateView('dashboard')} 
-              badge="A4 Builder"
-              size="md"
-            />
-            <p className="text-[10px] text-slate-400 font-medium pl-11 -mt-1 hidden sm:block">
-              Pixel-perfect MERN Resume & Live Editor
-            </p>
-          </div>
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <AutoResumeLogo 
+            onClick={() => onNavigateView('dashboard')} 
+            badge="A4 Builder"
+            size="sm"
+          />
 
-          {/* Navigation: Dashboard Button */}
+          {/* Navigation: Dashboard Button (Desktop only, or in Editor mobile) */}
           <button
             type="button"
             onClick={() => onNavigateView('dashboard')}
-            className={`ml-3 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+            className={`hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
               currentView === 'dashboard'
                 ? 'bg-slate-900 text-white shadow-sm'
                 : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/80'
@@ -121,11 +264,11 @@ export default function Navbar({
             <span>Dashboard</span>
           </button>
 
-          {/* Navigation: Templates Button */}
+          {/* Navigation: Templates Button (Desktop only) */}
           <button
             type="button"
             onClick={handleTemplatesClick}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm hover:shadow transition-all duration-150"
+            className="hidden sm:flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-xl text-xs font-bold shadow-sm hover:shadow transition-all duration-150"
             title="Browse 10 Professional Resume Templates"
           >
             <Layout className="w-3.5 h-3.5" />
@@ -134,9 +277,9 @@ export default function Navbar({
           </button>
         </div>
 
-        {/* Center: Customization Controls (Shown ONLY in Editor View) */}
+        {/* Center: Customization Controls (Shown on Desktop in Editor View) */}
         {currentView === 'editor' && (
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="hidden md:flex items-center gap-1.5">
             {/* Rearrange Sections Button */}
             <button
               type="button"
@@ -145,7 +288,7 @@ export default function Navbar({
               title="Rearrange Sections"
             >
               <ArrowUpDown className="w-3.5 h-3.5 text-[#00c598]" />
-              <span className="hidden md:inline">Rearrange</span>
+              <span>Rearrange</span>
             </button>
 
             {/* Color Picker Dropdown */}
@@ -163,7 +306,7 @@ export default function Navbar({
                   className="w-3.5 h-3.5 rounded-full ring-1 ring-black/10"
                   style={{ backgroundColor: theme.primaryColor || '#00c598' }}
                 />
-                <span className="hidden md:inline">Color</span>
+                <span>Color</span>
               </button>
 
               {showColorPicker && (
@@ -202,7 +345,7 @@ export default function Navbar({
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
               >
                 <Type className="w-3.5 h-3.5 text-slate-500" />
-                <span className="hidden md:inline">Font</span>
+                <span>Font</span>
               </button>
 
               {showFontPicker && (
@@ -241,7 +384,7 @@ export default function Navbar({
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-100 border border-slate-200 transition-colors"
               >
                 <LayoutGrid className="w-3.5 h-3.5 text-slate-500" />
-                <span className="hidden md:inline">Layout</span>
+                <span>Layout</span>
               </button>
 
               {showLayoutPicker && (
@@ -271,13 +414,13 @@ export default function Navbar({
         )}
 
         {/* Right Action Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Admin Portal Tab (Shown ONLY for Admins) */}
           {currentUser?.role === 'admin' && (
             <button
               type="button"
               onClick={() => onNavigateView(currentView === 'admin' ? 'dashboard' : 'admin')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                 currentView === 'admin'
                   ? 'bg-purple-600 text-white shadow-sm'
                   : 'bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-200'
@@ -285,32 +428,32 @@ export default function Navbar({
               title="Admin Panel: Manage Users & Upload Templates"
             >
               <Shield className="w-3.5 h-3.5" />
-              <span>Admin Panel</span>
+              <span className="hidden sm:inline">Admin</span>
             </button>
           )}
 
           {/* Editor Action Buttons (Shown ONLY in Editor View) */}
           {currentView === 'editor' && (
             <>
-              {/* Save to MERN Backend */}
+              {/* Save to MERN Backend (Desktop only, mobile in sub-toolbar) */}
               <button
                 type="button"
                 onClick={onSave}
                 disabled={isSaving}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors"
                 title="Save to MongoDB"
               >
                 <Cloud className="w-4 h-4 text-[#00c598]" />
-                <span className="hidden sm:inline">
+                <span>
                   {isSaving ? 'Saving...' : saveStatus || 'Save'}
                 </span>
               </button>
 
-              {/* Reset Template */}
+              {/* Reset Template (Desktop only) */}
               <button
                 type="button"
                 onClick={onReset}
-                className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+                className="hidden sm:inline-flex p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
                 title="Reset with Dummy Data"
               >
                 <RefreshCw className="w-4 h-4" />
@@ -321,7 +464,7 @@ export default function Navbar({
                 <button
                   type="button"
                   onClick={onPrint}
-                  className="p-2 text-purple-700 hover:text-purple-900 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 transition-colors"
+                  className="hidden sm:inline-flex p-2 text-purple-700 hover:text-purple-900 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 transition-colors"
                   title="Print A4 (Admin Feature)"
                 >
                   <Printer className="w-4 h-4" />
@@ -332,17 +475,17 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={handleConfettiAndDownload}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-[#00c598] to-[#00a37e] hover:from-[#00a37e] hover:to-[#008f6e] rounded-lg shadow-sm hover:shadow transition-all"
+                className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-[#00c598] to-[#00a37e] hover:from-[#00a37e] hover:to-[#008f6e] rounded-lg shadow-sm hover:shadow transition-all"
               >
                 <Download className="w-4 h-4" />
-                <span className="hidden sm:inline">Download PDF</span>
+                <span>PDF</span>
               </button>
             </>
           )}
 
           {/* User Account / Logout Menu */}
           {currentUser && (
-            <div className="relative ml-1">
+            <div className="relative ml-0.5">
               <button
                 type="button"
                 onClick={() => setShowUserMenu(!showUserMenu)}
@@ -369,34 +512,22 @@ export default function Navbar({
                         {currentUser.role?.toUpperCase() || 'USER'}
                       </span>
                     </div>
-                    <p className="text-[10px] text-slate-500 truncate mt-0.5">
+                    <p className="text-[11px] text-slate-400 truncate mt-0.5">
                       {currentUser.email}
                     </p>
                   </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowUserMenu(false);
-                      onNavigateView('dashboard');
-                    }}
-                    className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-lg text-left"
-                  >
-                    <LayoutGrid className="w-3.5 h-3.5 text-[#00c598]" />
-                    <span>My Dashboard</span>
-                  </button>
 
                   {currentUser.role === 'admin' && (
                     <button
                       type="button"
                       onClick={() => {
+                        onNavigateView(currentView === 'admin' ? 'dashboard' : 'admin');
                         setShowUserMenu(false);
-                        onNavigateView('admin');
                       }}
-                      className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-purple-700 hover:bg-purple-50 rounded-lg text-left"
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-purple-700 hover:bg-purple-50 transition-colors"
                     >
-                      <Shield className="w-3.5 h-3.5 text-purple-600" />
-                      <span>Admin Control Panel</span>
+                      <Shield className="w-3.5 h-3.5" />
+                      <span>{currentView === 'admin' ? 'Exit Admin Panel' : 'Admin Control Panel'}</span>
                     </button>
                   )}
 
@@ -404,21 +535,9 @@ export default function Navbar({
                     type="button"
                     onClick={() => {
                       setShowUserMenu(false);
-                      handleTemplatesClick();
-                    }}
-                    className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-lg text-left"
-                  >
-                    <Layout className="w-3.5 h-3.5 text-indigo-500" />
-                    <span>Browse 10 Templates</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowUserMenu(false);
                       onLogout();
                     }}
-                    className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-rose-600 hover:bg-rose-50 rounded-lg text-left mt-1"
+                    className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Log Out</span>
@@ -429,6 +548,91 @@ export default function Navbar({
           )}
         </div>
       </div>
+
+      {/* Mobile Sub-Toolbar (Shown ONLY in Editor View on Mobile) */}
+      {currentView === 'editor' && (
+        <div className="md:hidden border-t border-slate-100 bg-slate-50/95 px-3 py-2 flex items-center gap-2 overflow-x-auto no-scrollbar">
+          {/* Quick Color Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setShowColorPicker(true);
+              setShowFontPicker(false);
+              setShowLayoutPicker(false);
+            }}
+            className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg text-xs font-semibold text-slate-700 border border-slate-200 shadow-xs active:scale-95 transition-transform"
+          >
+            <div
+              className="w-3.5 h-3.5 rounded-full ring-1 ring-black/10 shrink-0"
+              style={{ backgroundColor: theme.primaryColor || '#00c598' }}
+            />
+            <span>Color</span>
+          </button>
+
+          {/* Quick Font Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setShowFontPicker(true);
+              setShowColorPicker(false);
+              setShowLayoutPicker(false);
+            }}
+            className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg text-xs font-semibold text-slate-700 border border-slate-200 shadow-xs active:scale-95 transition-transform"
+          >
+            <Type className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <span>Font</span>
+          </button>
+
+          {/* Quick Layout Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setShowLayoutPicker(true);
+              setShowColorPicker(false);
+              setShowFontPicker(false);
+            }}
+            className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg text-xs font-semibold text-slate-700 border border-slate-200 shadow-xs active:scale-95 transition-transform"
+          >
+            <LayoutGrid className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <span>Layout</span>
+          </button>
+
+          {/* Rearrange */}
+          <button
+            type="button"
+            onClick={() => setShowRearrangeModal(true)}
+            className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg text-xs font-semibold text-slate-700 border border-slate-200 shadow-xs active:scale-95 transition-transform"
+          >
+            <ArrowUpDown className="w-3.5 h-3.5 text-[#00c598] shrink-0" />
+            <span>Rearrange</span>
+          </button>
+
+          {/* Save Status */}
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={isSaving}
+            className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 bg-white rounded-lg text-xs font-semibold text-slate-700 border border-slate-200 shadow-xs active:scale-95 transition-transform"
+          >
+            <Cloud className="w-3.5 h-3.5 text-[#00c598] shrink-0" />
+            <span>{isSaving ? 'Saving...' : saveStatus || 'Save'}</span>
+          </button>
+
+          {/* Reset */}
+          <button
+            type="button"
+            onClick={onReset}
+            className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 bg-white rounded-lg text-xs font-semibold text-slate-500 border border-slate-200 shadow-xs active:scale-95 transition-transform"
+            title="Reset dummy data"
+          >
+            <RefreshCw className="w-3.5 h-3.5 shrink-0" />
+            <span>Reset</span>
+          </button>
+        </div>
+      )}
+
+      {/* Render Mobile Sheets via Portal directly to body */}
+      {renderMobileSheets()}
 
       {/* Rearrange Sections Modal */}
       {showRearrangeModal && (

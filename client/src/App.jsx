@@ -6,6 +6,7 @@ import AdminPanel from './components/Admin/AdminPanel';
 import AuthModal from './components/Auth/AuthModal';
 import { RESUME_TEMPLATES } from './types/templatesData';
 import { toPng } from 'html-to-image';
+import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 
@@ -323,65 +324,101 @@ export default function App() {
       incrementTemplateDownload(matched.id);
     }
 
-    const element = printRef.current;
-    
-    document.body.classList.add('exporting-pdf');
-    element.classList.add('exporting-pdf');
+    // Get all .a4-page sheets (Page 1, and optionally Page 2)
+    const pageNodes = printRef.current.querySelectorAll('.a4-page');
+    if (!pageNodes || pageNodes.length === 0) return;
 
-    if (window.getSelection) {
-      window.getSelection().removeAllRanges();
-    }
+    // Create an isolated offscreen container with exact standard A4 width
+    const offscreenWrapper = document.createElement('div');
+    offscreenWrapper.style.position = 'fixed';
+    offscreenWrapper.style.top = '-99999px';
+    offscreenWrapper.style.left = '0';
+    offscreenWrapper.style.width = '794px';
+    offscreenWrapper.style.height = '1123px';
+    offscreenWrapper.style.zIndex = '-9999';
+    offscreenWrapper.style.background = '#ffffff';
+    offscreenWrapper.style.overflow = 'hidden';
+    offscreenWrapper.style.pointerEvents = 'none';
 
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    document.body.appendChild(offscreenWrapper);
 
     try {
-      const dataUrl = await toPng(element, {
-        pixelRatio: 2,
-        backgroundColor: '#ffffff',
-        width: element.offsetWidth,
-        height: element.offsetHeight,
-        style: {
-          margin: '0',
-          marginLeft: '0',
-          marginRight: '0',
-          marginTop: '0',
-          marginBottom: '0',
-          transform: 'none',
-          boxShadow: 'none'
-        },
-        skipFonts: true,
-        fontEmbedCSS: '',
-        filter: (node) => {
-          if (!node.classList) return true;
-          return !(
-            node.classList.contains('no-print') ||
-            node.classList.contains('hover-action-bar') ||
-            node.classList.contains('gear-popup') ||
-            node.classList.contains('btn-new-section') ||
-            (node.closest && node.closest('.no-print'))
-          );
-        }
-      });
-
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
 
-      const imgProps = pdf.getImageProperties(dataUrl);
-      const pdfWidth = 210;
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      for (let i = 0; i < pageNodes.length; i++) {
+        const pageEl = pageNodes[i];
+        
+        // Clone page element
+        const clone = pageEl.cloneNode(true);
+        clone.classList.add('exporting-pdf');
+        clone.style.transform = 'none';
+        clone.style.transformOrigin = 'top left';
+        clone.style.width = '794px';
+        clone.style.height = '1123px';
+        clone.style.minHeight = '1123px';
+        clone.style.maxHeight = '1123px';
+        clone.style.margin = '0';
+        clone.style.boxShadow = 'none';
 
-      pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`${resume.header?.name?.replace(/\s+/g, '_') || 'Resume'}_AutoResume.pdf`);
-      showToast('PDF downloaded successfully! (Download count updated)', 'success');
+        // Clean up edit buttons, hovers and contenteditable attributes
+        clone.querySelectorAll('.no-print, .hover-action-bar, .gear-popup, .btn-new-section, .btn-add-entry').forEach((el) => el.remove());
+        clone.querySelectorAll('[contenteditable]').forEach((el) => el.removeAttribute('contenteditable'));
+
+        offscreenWrapper.innerHTML = '';
+        offscreenWrapper.appendChild(clone);
+
+        await new Promise((resolve) => setTimeout(resolve, 150));
+
+        let dataUrl;
+        try {
+          dataUrl = await toPng(clone, {
+            pixelRatio: 2.5,
+            backgroundColor: '#ffffff',
+            width: 794,
+            height: 1123,
+            style: {
+              margin: '0',
+              transform: 'none',
+              boxShadow: 'none',
+              width: '794px',
+              height: '1123px'
+            },
+            skipFonts: true,
+            fontEmbedCSS: ''
+          });
+        } catch (toPngErr) {
+          const canvas = await html2canvas(clone, {
+            scale: 2.5,
+            width: 794,
+            height: 1123,
+            windowWidth: 1200,
+            useCORS: true,
+            logging: false,
+            backgroundColor: '#ffffff'
+          });
+          dataUrl = canvas.toDataURL('image/png');
+        }
+
+        if (i > 0) {
+          pdf.addPage('a4', 'portrait');
+        }
+        pdf.addImage(dataUrl, 'PNG', 0, 0, 210, 297);
+      }
+
+      const fileName = `${resume.header?.name?.replace(/\s+/g, '_') || 'Resume'}_AutoResume.pdf`;
+      pdf.save(fileName);
+      showToast(`A4 PDF (${pageNodes.length} Page${pageNodes.length > 1 ? 's' : ''}) downloaded successfully!`, 'success');
     } catch (err) {
       console.error('PDF Generation error:', err);
       window.print();
     } finally {
-      document.body.classList.remove('exporting-pdf');
-      element.classList.remove('exporting-pdf');
+      if (document.body.contains(offscreenWrapper)) {
+        document.body.removeChild(offscreenWrapper);
+      }
     }
   };
 

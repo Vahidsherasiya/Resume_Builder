@@ -213,34 +213,34 @@ export default function Dashboard({
   });
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[#f3f6f9] py-8 sm:py-12 px-4 sm:px-8">
-      <div className="max-w-7xl mx-auto space-y-12">
+    <div className="min-h-[calc(100vh-4rem)] bg-[#f3f6f9] py-5 sm:py-12 px-3 sm:px-8 overflow-x-hidden max-w-full">
+      <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12">
         {/* Welcome Banner */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-xl border border-slate-800">
+        <div className="relative overflow-hidden bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 rounded-3xl p-5 sm:p-12 text-white shadow-xl border border-slate-800">
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#00c598]/15 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
           <div className="absolute bottom-0 right-48 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#00c598]/10 text-[#00c598] rounded-full text-xs font-semibold border border-[#00c598]/20 mb-4">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#00c598]/10 text-[#00c598] rounded-full text-[11px] font-semibold border border-[#00c598]/20 mb-3 sm:mb-4">
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
               <span>AI & ATS Optimized Resume Platform</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight mb-3">
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tight leading-tight mb-3 break-words">
               Welcome back, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00c598] to-[#38bdf8]">{currentUser?.name || 'Professional'}</span>
             </h1>
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+            <p className="text-slate-300 text-xs sm:text-base leading-relaxed mb-5 sm:mb-6">
               Choose from 10 handcrafted resume templates loaded with realistic dummy data, live visual designs, and verified download counts.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <a
                 href="#templates-section"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#00c598] to-[#00a37e] hover:from-[#00a37e] hover:to-[#008f6e] text-white text-xs sm:text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
+                className="w-full sm:w-auto text-center inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#00c598] to-[#00a37e] hover:from-[#00a37e] hover:to-[#008f6e] text-white text-xs sm:text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all"
               >
                 <Plus className="w-4 h-4" />
                 <span>Choose a Template to Start</span>
               </a>
-              <span className="text-xs text-slate-400 font-medium ml-2">
+              <span className="text-xs text-slate-400 font-medium">
                 {savedResumes.length > 0
                   ? `${savedResumes.length} custom resume${savedResumes.length === 1 ? '' : 's'} created`
                   : 'No resumes created yet — select any template below to start!'}
