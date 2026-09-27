@@ -55,31 +55,35 @@ export default function AuthModal({ onLoginSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 sm:p-6 overflow-y-auto">
-      <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col md:flex-row animate-popover">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-3 sm:p-6 overflow-y-auto">
+      <div className="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col md:flex-row my-auto max-h-[96vh] md:max-h-none overflow-y-auto">
         {/* Left Brand Panel */}
-        <div className="md:w-5/12 bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+        <div className="md:w-5/12 bg-gradient-to-br from-slate-900 via-slate-850 to-slate-950 p-4 sm:p-6 md:p-8 text-white flex flex-col justify-between relative overflow-hidden shrink-0">
           {/* Subtle Ambient Glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#00c598]/20 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none -ml-20 -mb-20"></div>
+          <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-[#00c598]/20 rounded-full blur-3xl pointer-events-none -mr-16 md:-mr-20 -mt-16 md:-mt-20"></div>
+          <div className="absolute bottom-0 left-0 w-48 md:w-64 h-48 md:h-64 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none -ml-16 md:-ml-20 -mb-16 md:-mb-20"></div>
 
           <div className="relative z-10">
             {/* Logo */}
-            <AutoResumeLogo
-              size="lg"
-              theme="light-text"
-              badge="A4 Pro"
-              className="mb-8"
-            />
+            <div className="flex items-center justify-between md:block mb-2 md:mb-8">
+              <AutoResumeLogo
+                size="md"
+                theme="light-text"
+                badge="A4 Pro"
+              />
+              <span className="md:hidden text-[10px] font-bold text-[#00c598] bg-[#00c598]/10 px-2 py-0.5 rounded-full border border-[#00c598]/30">
+                ATS Builder
+              </span>
+            </div>
 
-            <h2 className="text-2xl font-black tracking-tight leading-snug mb-3">
+            <h2 className="text-base sm:text-xl md:text-2xl font-black tracking-tight leading-snug mb-1 md:mb-3">
               Build Dream Resumes That Get You Hired.
             </h2>
-            <p className="text-slate-400 text-xs leading-relaxed mb-6">
+            <p className="hidden md:block text-slate-400 text-xs leading-relaxed mb-6">
               Access 10 modern ATS-friendly templates, pre-filled with realistic sample dummy data and live A4 PDF export.
             </p>
 
-            <div className="space-y-3 text-xs">
+            <div className="hidden md:flex flex-col space-y-3 text-xs">
               <div className="flex items-center gap-2.5 text-slate-300">
                 <CheckCircle className="w-4 h-4 text-[#00c598] shrink-0" />
                 <span>10 Handcrafted Professional Templates</span>
@@ -99,41 +103,41 @@ export default function AuthModal({ onLoginSuccess }) {
             </div>
           </div>
 
-          <div className="relative z-10 pt-8 border-t border-slate-800 text-[11px] text-slate-400 flex items-center gap-2">
+          <div className="hidden md:flex relative z-10 pt-8 border-t border-slate-800 text-[11px] text-slate-400 items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#00c598]" />
             <span>Encrypted Password & Role-Based Access</span>
           </div>
         </div>
 
         {/* Right Form Panel */}
-        <div className="md:w-7/12 p-8 sm:p-10 flex flex-col justify-center bg-white">
+        <div className="md:w-7/12 p-4 sm:p-8 md:p-10 flex flex-col justify-center bg-white">
           <div className="max-w-md mx-auto w-full">
-            <div className="mb-6">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-[11px] font-bold mb-3 border border-slate-200">
-                <KeyRound className="w-3.5 h-3.5 text-[#00c598]" />
-                <span>{isRegister ? 'New Registration (Default: User)' : 'Verified Credentials Required'}</span>
+            <div className="mb-3 sm:mb-5 md:mb-6">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 md:px-3 md:py-1 bg-slate-100 text-slate-700 rounded-full text-[10px] md:text-[11px] font-bold mb-1.5 md:mb-3 border border-slate-200">
+                <KeyRound className="w-3 md:w-3.5 h-3 md:h-3.5 text-[#00c598]" />
+                <span>{isRegister ? 'New Registration' : 'Verified Credentials'}</span>
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 tracking-tight">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
                 {isRegister ? 'Create Your Account' : 'Welcome Back'}
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 md:mt-1">
                 {isRegister
-                  ? 'Sign up with your details. Your default account role will be User.'
-                  : 'Enter your verified email and password to log in.'}
+                  ? 'Sign up with your details to get started.'
+                  : 'Enter your email and password to log in.'}
               </p>
             </div>
 
             {errorMsg && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-semibold flex items-start gap-2">
+              <div className="mb-3 p-2.5 sm:p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-semibold flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                 <span>{errorMsg}</span>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-2.5 sm:space-y-4">
               {isRegister && (
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                     Full Name
                   </label>
                   <div className="relative">
@@ -144,14 +148,14 @@ export default function AuthModal({ onLoginSuccess }) {
                       placeholder="e.g. Alex Morgan"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00c598]/50 focus:border-[#00c598] transition-all"
+                      className="w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00c598]/50 focus:border-[#00c598] transition-all"
                     />
                   </div>
                 </div>
               )}
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                   Email Address
                 </label>
                 <div className="relative">
@@ -162,13 +166,13 @@ export default function AuthModal({ onLoginSuccess }) {
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00c598]/50 focus:border-[#00c598] transition-all"
+                    className="w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00c598]/50 focus:border-[#00c598] transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
                   Password
                 </label>
                 <div className="relative">
@@ -179,7 +183,7 @@ export default function AuthModal({ onLoginSuccess }) {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00c598]/50 focus:border-[#00c598] transition-all"
+                    className="w-full pl-10 pr-4 py-2 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00c598]/50 focus:border-[#00c598] transition-all"
                   />
                 </div>
               </div>
@@ -187,14 +191,14 @@ export default function AuthModal({ onLoginSuccess }) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-[#00c598] to-[#00a37e] hover:from-[#00a37e] hover:to-[#008f6e] text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all duration-150 flex items-center justify-center gap-2 mt-2"
+                className="w-full py-2.5 sm:py-3 px-4 bg-gradient-to-r from-[#00c598] to-[#00a37e] hover:from-[#00a37e] hover:to-[#008f6e] text-white font-bold text-xs rounded-xl shadow-md hover:shadow-lg transition-all duration-150 flex items-center justify-center gap-2 mt-1 sm:mt-2"
               >
-                <span>{isLoading ? 'Verifying...' : isRegister ? 'Create Account & Sign In' : 'Log In with Verified Credentials'}</span>
+                <span>{isLoading ? 'Verifying...' : isRegister ? 'Create Account & Sign In' : 'Log In'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
 
-            <div className="mt-5 text-center">
+            <div className="mt-3.5 sm:mt-5 text-center">
               <button
                 type="button"
                 onClick={() => {
@@ -214,4 +218,3 @@ export default function AuthModal({ onLoginSuccess }) {
     </div>
   );
 }
-
